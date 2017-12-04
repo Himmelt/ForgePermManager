@@ -18,12 +18,12 @@ public class EventHandler {
     }
 
 
-    public void func(EntityPlayer player) {
+    private void func(EntityPlayer player) {
         player.sendMessage(player.getDisplayName());
         ServerPermManager manager = PermServerAPI.getPermManager();
         manager.add(player, "perm.test.*");
         boolean has = manager.has(player, "perm");
-        player.sendMessage(new TextComponentString("I has ? " + has));
+        player.sendMessage(new TextComponentString("I hasGroup ? " + has));
     }
 
 }

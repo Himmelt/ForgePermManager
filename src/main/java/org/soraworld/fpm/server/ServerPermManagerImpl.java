@@ -2,12 +2,13 @@ package org.soraworld.fpm.server;
 
 import net.minecraft.entity.player.EntityPlayer;
 import org.soraworld.fpm.api.manager.ServerPermManager;
+import org.soraworld.fpm.data.Permission;
 
 import java.util.HashMap;
 
 public class ServerPermManagerImpl implements ServerPermManager {
 
-    private final HashMap<String, PlayerPermission> permMap = new HashMap<>();
+    private final HashMap<String, Permission> permMap = new HashMap<>();
 
     @Override
     public void init() {
@@ -22,27 +23,27 @@ public class ServerPermManagerImpl implements ServerPermManager {
     public boolean has(EntityPlayer player, String permission) {
         String username = player.getName();
         if (!permMap.containsKey(username)) {
-            permMap.put(username, new PlayerPermission());
+            permMap.put(username, new Permission());
         }
-        return permMap.get(username).has(permission);
+        return permMap.get(username).hasPerm(permission);
     }
 
     @Override
     public void add(EntityPlayer player, String permission) {
         String username = player.getName();
         if (!permMap.containsKey(username)) {
-            permMap.put(username, new PlayerPermission());
+            permMap.put(username, new Permission());
         }
-        permMap.get(username).add(permission);
+        permMap.get(username).addPerm(permission);
     }
 
     @Override
     public void remove(EntityPlayer player, String permission) {
         String username = player.getName();
         if (!permMap.containsKey(username)) {
-            permMap.put(username, new PlayerPermission());
+            permMap.put(username, new Permission());
         }
-        permMap.get(username).remove(permission);
+        permMap.get(username).removePerm(permission);
     }
 
 }

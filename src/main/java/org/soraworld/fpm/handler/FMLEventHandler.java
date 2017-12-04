@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class FMLEventHandler {
 
-    protected FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("fpm");
+    private FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("fpm");
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
