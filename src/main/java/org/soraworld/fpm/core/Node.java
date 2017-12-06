@@ -1,6 +1,6 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.api.core.Node;
+import org.soraworld.fpm.data.BinarySerialize;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -8,16 +8,17 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashMap;
 
-class NodeImpl implements Node {
+class Node implements BinarySerialize {
 
     private static final byte FULL = 42;
     private static final byte END = 0;
     private static final String STAR = "*";
 
     private boolean full = false;
-    private HashMap<String, NodeImpl> children;
+    private HashMap<String, Node> children;
 
-    void write(DataOutput output) throws IOException {
+    @Override
+    public void write(DataOutput output) throws IOException {
         if (full) {
             output.writeByte(FULL);
             return;
@@ -37,7 +38,8 @@ class NodeImpl implements Node {
     }
 
     /// 不应该设计成循环读取
-    void read(DataInput input) throws IOException {
+    @Override
+    public void read(DataInput input) throws IOException {
         byte length = input.readByte();
         if (length == 0) {
             return;
@@ -48,7 +50,7 @@ class NodeImpl implements Node {
             full = true;
         } else {
             String name = new String(buff, "UTF-8");
-            children.put(name, new NodeImpl());
+            children.put(name, new Node());
         }
         //read(input);
     }
@@ -81,7 +83,7 @@ class NodeImpl implements Node {
             return;
         }
         if (children == null) children = new HashMap<>();
-        if (!children.containsKey(nodes[i])) children.put(nodes[i], new NodeImpl());
+        if (!children.containsKey(nodes[i])) children.put(nodes[i], new Node());
         children.get(nodes[i]).addNodes(nodes, i + 1);
     }
 

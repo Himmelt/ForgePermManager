@@ -1,6 +1,6 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.api.core.Group;
+import org.soraworld.fpm.data.BinarySerialize;
 import org.soraworld.fpm.manager.GroupManager;
 
 import javax.annotation.Nonnull;
@@ -8,10 +8,10 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public class GroupImpl extends NodeImpl implements Group {
+public class Group extends Node implements BinarySerialize {
 
     private String display;
-    private final HashSet<GroupImpl> parents = new HashSet<>();
+    private final HashSet<Group> parents = new HashSet<>();
     private static final GroupManager manager = GroupManager.getInstance();
 
     public boolean hasParent(String parent) {
@@ -39,7 +39,7 @@ public class GroupImpl extends NodeImpl implements Group {
 
     @Override
     public boolean hasNodes(@Nonnull String[] nodes) {
-        for (GroupImpl parent : parents) {
+        for (Group parent : parents) {
             if (parent.hasNodes(nodes)) return true;
         }
         return super.hasNodes(nodes);

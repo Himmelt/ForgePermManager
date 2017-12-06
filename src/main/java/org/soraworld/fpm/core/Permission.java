@@ -1,17 +1,18 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.api.core.Permission;
+import org.soraworld.fpm.data.BinarySerialize;
 import org.soraworld.fpm.manager.GroupManager;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashSet;
 
-public class PermissionImpl implements Permission {
+public class Permission implements BinarySerialize {
 
-    private NodeImpl root;
-    private ArrayList<String> groups;
+    private Node root;
+    private HashSet<String> groups;
     private static final GroupManager manager = GroupManager.getInstance();
 
     /**
@@ -32,7 +33,7 @@ public class PermissionImpl implements Permission {
         // 组权限检查
         if (groups != null) {
             for (String name : groups) {
-                GroupImpl group = manager.getGroup(name);
+                Group group = manager.getGroup(name);
                 if (group != null && group.hasNodes(nodes)) return true;
             }
         }
@@ -44,7 +45,7 @@ public class PermissionImpl implements Permission {
         // 权限正则格式
         if (!permission.matches("([a-zA-Z0-9_]+\\.)+(\\1|\\*)")) return;
         String[] nodes = permission.split("\\.");
-        if (root == null) root = new NodeImpl();
+        if (root == null) root = new Node();
         // 权限节点解析数组
         root.addNodes(nodes);
         update();
@@ -66,8 +67,8 @@ public class PermissionImpl implements Permission {
     }
 
     public void addGroup(String name) {
-        if (groups == null) groups = new ArrayList<>();
-        if (!groups.contains(name)) groups.add(name);
+        if (groups == null) groups = new HashSet<>();
+        groups.add(name);
         update();
     }
 
@@ -83,11 +84,39 @@ public class PermissionImpl implements Permission {
 
     }
 
-    public void read(DataInput input) {
-
+    @Override
+    public void read(DataInput input) throws IOException {
+        byte size = input.readByte();
+        if (size <= 0) {
+            groups = null;
+        } else {
+            groups = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                byte length = input.readByte();
+                byte[] bytes = new byte[length];
+                input.readFully(bytes);
+                groups.add(new String(bytes, "UTF-8"));
+            }
+        }
+        root = new Node();
+        root.read(input);
     }
 
-    public void write(DataOutput output) {
-
+    @Override
+    public void write(DataOutput output) throws IOException {
+        if (groups == null) {
+            output.writeByte(0);
+        } else {
+            output.writeByte(groups.size());
+            for (String group : groups) {
+                byte[] bytes = group.getBytes("UTF-8");
+                if (bytes.length >= 1) {
+                    output.writeByte(bytes.length);
+                    output.write(bytes);
+                }
+            }
+        }
+        root.write(output);
+        output.write(0);
     }
 }
