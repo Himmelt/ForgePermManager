@@ -8,7 +8,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+//Only edit below this line, the above core adds and enables the necessary things for Forge to be setup.
 
 version = "1.0"
 group = "org.soraworld.fpm" // http://maven.apache.org/guides/mini/guide-naming-conventions.html

@@ -1,4 +1,4 @@
-package org.soraworld.fpm.client;
+package org.soraworld.fpm.manager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

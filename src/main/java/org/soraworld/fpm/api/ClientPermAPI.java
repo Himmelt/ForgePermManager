@@ -3,10 +3,10 @@ package org.soraworld.fpm.api;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.fpm.api.manager.ClientPermManager;
-import org.soraworld.fpm.client.ClientPermManagerImpl;
+import org.soraworld.fpm.manager.ClientPermManagerImpl;
 
 @SideOnly(Side.CLIENT)
-public class PermClientAPI {
+public class ClientPermAPI {
 
     private static final ClientPermManager client = new ClientPermManagerImpl();
 

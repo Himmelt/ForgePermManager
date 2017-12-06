@@ -2,17 +2,19 @@ package org.soraworld.fpm.api.manager;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import javax.annotation.Nonnull;
+
 public interface ServerPermManager {
 
-    void init();
+    boolean has(@Nonnull EntityPlayer player, String permission);
 
-    boolean available();
+    void add(@Nonnull EntityPlayer player, String permission);
 
-    boolean has(EntityPlayer player, String permission);
+    void remove(@Nonnull EntityPlayer player, String permission);
 
-    void add(EntityPlayer player, String permission);
+    void load(@Nonnull EntityPlayer player);
 
-    void remove(EntityPlayer player, String permission);
+    void unload(@Nonnull EntityPlayer player);
 
-
+    void saveAll();
 }

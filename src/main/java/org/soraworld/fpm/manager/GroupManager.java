@@ -1,11 +1,13 @@
-package org.soraworld.fpm.data;
+package org.soraworld.fpm.manager;
+
+import org.soraworld.fpm.core.GroupImpl;
 
 import java.util.HashMap;
 
 public class GroupManager {
 
-    private final Group base = new Group();
-    private final HashMap<String, Group> groups = new HashMap<>();
+    private final GroupImpl base = new GroupImpl();
+    private final HashMap<String, GroupImpl> groups = new HashMap<>();
 
     private static GroupManager instance;
 
@@ -13,7 +15,7 @@ public class GroupManager {
         return instance == null ? instance = new GroupManager() : instance;
     }
 
-    public Group getBase() {
+    public GroupImpl getBase() {
         return base;
     }
 
@@ -21,12 +23,12 @@ public class GroupManager {
         return groups.containsKey(name) && groups.get(name) != null;
     }
 
-    public Group getGroup(String name) {
+    public GroupImpl getGroup(String name) {
         return groups.get(name);
     }
 
     public void addGroup(String name) {
-        if (!hasGroup(name)) groups.put(name, new Group());
+        if (!hasGroup(name)) groups.put(name, new GroupImpl());
     }
 
     public void removeGroup(String name) {

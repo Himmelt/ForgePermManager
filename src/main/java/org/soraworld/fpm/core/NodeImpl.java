@@ -1,4 +1,6 @@
-package org.soraworld.fpm.data;
+package org.soraworld.fpm.core;
+
+import org.soraworld.fpm.api.core.Node;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -6,14 +8,14 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashMap;
 
-class Node {
+class NodeImpl implements Node {
 
     private static final byte FULL = 42;
     private static final byte END = 0;
     private static final String STAR = "*";
 
     private boolean full = false;
-    private HashMap<String, Node> children;
+    private HashMap<String, NodeImpl> children;
 
     void write(DataOutput output) throws IOException {
         if (full) {
@@ -46,7 +48,7 @@ class Node {
             full = true;
         } else {
             String name = new String(buff, "UTF-8");
-            children.put(name, new Node());
+            children.put(name, new NodeImpl());
         }
         //read(input);
     }
@@ -79,7 +81,7 @@ class Node {
             return;
         }
         if (children == null) children = new HashMap<>();
-        if (!children.containsKey(nodes[i])) children.put(nodes[i], new Node());
+        if (!children.containsKey(nodes[i])) children.put(nodes[i], new NodeImpl());
         children.get(nodes[i]).addNodes(nodes, i + 1);
     }
 
@@ -97,5 +99,9 @@ class Node {
             return;
         }
         if (children.containsKey(nodes[i])) children.get(nodes[i]).removeNodes(nodes, i + 1);
+    }
+
+    public boolean isEmpty() {
+        return !full && (children == null || children.isEmpty());
     }
 }

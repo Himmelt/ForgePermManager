@@ -1,14 +1,17 @@
-package org.soraworld.fpm.data;
+package org.soraworld.fpm.core;
+
+import org.soraworld.fpm.api.core.Group;
+import org.soraworld.fpm.manager.GroupManager;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public class Group extends Node {
+public class GroupImpl extends NodeImpl implements Group {
 
     private String display;
-    private final HashSet<Group> parents = new HashSet<>();
+    private final HashSet<GroupImpl> parents = new HashSet<>();
     private static final GroupManager manager = GroupManager.getInstance();
 
     public boolean hasParent(String parent) {
@@ -36,7 +39,7 @@ public class Group extends Node {
 
     @Override
     public boolean hasNodes(@Nonnull String[] nodes) {
-        for (Group parent : parents) {
+        for (GroupImpl parent : parents) {
             if (parent.hasNodes(nodes)) return true;
         }
         return super.hasNodes(nodes);

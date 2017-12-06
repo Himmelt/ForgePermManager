@@ -1,19 +1,21 @@
 package org.soraworld.fpm.handler;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.FMLEventChannel;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import org.soraworld.fpm.api.ServerPermAPI;
+import org.soraworld.fpm.api.manager.ServerPermManager;
 
 public class FMLEventHandler {
 
-    private FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("fpm");
+    private static final ServerPermManager manager = ServerPermAPI.getPermManager();
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        SimpleNetworkWrapper wrapper = NetworkRegistry.INSTANCE.newSimpleChannel("n");
-        channel.sendTo(null, (EntityPlayerMP) event.player);
+        manager.load(event.player);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        manager.unload(event.player);
     }
 }
