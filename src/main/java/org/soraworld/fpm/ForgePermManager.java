@@ -8,16 +8,13 @@ import org.soraworld.fpm.manager.ServerPermManager;
 import org.soraworld.fpm.proxy.CommonProxy;
 
 @Mod(
-        modid = "fpm",
-        name = "ForgePermManager",
-        version = "1.0"
+        modid = Constants.MOD_ID,
+        name = Constants.MOD_NAME,
+        version = Constants.MOD_VERSION
 )
 public class ForgePermManager {
 
-    @SidedProxy(
-            clientSide = "org.soraworld.fpm.proxy.ClientProxy",
-            serverSide = "org.soraworld.fpm.proxy.ServerProxy"
-    )
+    @SidedProxy(clientSide = Constants.CLIENT_PROXY, serverSide = Constants.SERVER_PROXY)
     private static CommonProxy proxy;
 
     @Mod.EventHandler
@@ -28,5 +25,9 @@ public class ForgePermManager {
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         ServerPermManager.getInstance().saveAll();
+    }
+
+    public static CommonProxy getProxy() {
+        return proxy;
     }
 }

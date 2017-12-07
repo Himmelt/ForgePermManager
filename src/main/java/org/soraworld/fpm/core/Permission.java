@@ -1,6 +1,13 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.data.BinarySerialize;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.soraworld.fpm.ForgePermManager;
+import org.soraworld.fpm.data.IOMessage;
 import org.soraworld.fpm.manager.GroupManager;
 
 import javax.annotation.Nonnull;
@@ -9,7 +16,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashSet;
 
-public class Permission implements BinarySerialize {
+public class Permission implements IOMessage {
 
     private Node root;
     private HashSet<String> groups;
@@ -118,5 +125,33 @@ public class Permission implements BinarySerialize {
         }
         root.write(output);
         output.write(0);
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        try {
+            read(new ByteBufInputStream(buf));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        try {
+            write(new ByteBufOutputStream(buf));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class PermissionHandler implements IMessageHandler<Permission, IMessage> {
+
+        @Override
+        public IMessage onMessage(Permission message, MessageContext ctx) {
+            System.out.println(ctx.side);
+            ForgePermManager.getProxy().getPermManager().process(message, ctx);
+            return null;
+        }
     }
 }

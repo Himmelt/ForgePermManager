@@ -1,6 +1,9 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.data.BinarySerialize;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import org.soraworld.fpm.data.IOMessage;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -8,7 +11,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashMap;
 
-class Node implements BinarySerialize {
+class Node implements IOMessage {
 
     private static final byte FULL = 42;
     private static final byte END = 0;
@@ -105,5 +108,23 @@ class Node implements BinarySerialize {
 
     public boolean isEmpty() {
         return !full && (children == null || children.isEmpty());
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        try {
+            read(new ByteBufInputStream(buf));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        try {
+            write(new ByteBufOutputStream(buf));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

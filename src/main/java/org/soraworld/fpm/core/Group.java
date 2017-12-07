@@ -1,6 +1,6 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.data.BinarySerialize;
+import org.soraworld.fpm.data.IOMessage;
 import org.soraworld.fpm.manager.GroupManager;
 
 import javax.annotation.Nonnull;
@@ -8,7 +8,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public class Group extends Node implements BinarySerialize {
+public class Group extends Node implements IOMessage {
 
     private String display;
     private final HashSet<Group> parents = new HashSet<>();

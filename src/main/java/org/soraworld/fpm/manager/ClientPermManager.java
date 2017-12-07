@@ -3,25 +3,35 @@ package org.soraworld.fpm.manager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.fpm.core.Permission;
 
-import java.util.HashSet;
+import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class ClientPermManager {
 
-    private final HashSet<String> permissions = new HashSet<>();
+    private Permission permission = new Permission();
+
+    private static ClientPermManager instance;
     private static final Minecraft mc = Minecraft.getMinecraft();
 
+    public static ClientPermManager getInstance() {
+        return instance == null ? instance = new ClientPermManager() : instance;
+    }
+
     public boolean has(String permission) {
-        return mc.player != null && permissions.contains(permission);
+        return mc.player != null && this.permission.hasPerm(permission);
     }
 
     public void add(String permission) {
-        permissions.add(permission);
+        this.permission.addPerm(permission);
     }
 
     public void remove(String permission) {
-        permissions.remove(permission);
+        this.permission.removePerm(permission);
     }
 
+    public void download(@Nonnull Permission permission) {
+        this.permission = permission;
+    }
 }
