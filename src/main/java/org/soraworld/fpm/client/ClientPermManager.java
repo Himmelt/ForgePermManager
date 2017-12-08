@@ -1,8 +1,9 @@
-package org.soraworld.fpm.manager;
+package org.soraworld.fpm.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.Permission;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,10 @@ public class ClientPermManager {
     }
 
     public void download(@Nonnull Permission permission) {
+        this.permission = permission;
+    }
+
+    public void download(@Nonnull Group group) {
         this.permission = permission;
     }
 }

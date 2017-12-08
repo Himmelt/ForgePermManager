@@ -3,10 +3,6 @@ package org.soraworld.fpm.core;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import org.soraworld.fpm.ForgePermManager;
 import org.soraworld.fpm.data.IOMessage;
 import org.soraworld.fpm.manager.GroupManager;
 
@@ -145,13 +141,4 @@ public class Permission implements IOMessage {
         }
     }
 
-    public class PermissionHandler implements IMessageHandler<Permission, IMessage> {
-
-        @Override
-        public IMessage onMessage(Permission message, MessageContext ctx) {
-            System.out.println(ctx.side);
-            ForgePermManager.getProxy().getPermManager().process(message, ctx);
-            return null;
-        }
-    }
 }
