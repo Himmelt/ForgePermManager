@@ -8,9 +8,6 @@ public class ServerProxy extends CommonProxy {
 
     @Override
     public void registerEventHandler() {
-        System.out.println("ServerProxy.registerEventHandler->super");
         super.registerEventHandler();
-        //MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
-        //MinecraftForge.EVENT_BUS.register(new EventBusHandler());
     }
 }

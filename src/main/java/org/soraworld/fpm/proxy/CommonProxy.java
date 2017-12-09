@@ -12,9 +12,11 @@ public class CommonProxy {
     int MSG_ID = 0;
 
     public void registerEventHandler() {
-        System.out.println("CommonProxy.registerEventHandler");
         MinecraftForge.EVENT_BUS.register(new EventBusHandler());
-        //MessageManager.getNetwork().registerMessage(MessageHandler.class, TestMessage.class, 1, Side.SERVER);
+    }
+
+    public SimpleNetworkWrapper getNetwork() {
+        return network;
     }
 
 }

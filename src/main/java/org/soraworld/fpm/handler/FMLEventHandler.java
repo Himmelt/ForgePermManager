@@ -2,7 +2,7 @@ package org.soraworld.fpm.handler;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import org.soraworld.fpm.manager.ServerPermManager;
+import org.soraworld.fpm.server.ServerPermManager;
 
 public class FMLEventHandler {
 

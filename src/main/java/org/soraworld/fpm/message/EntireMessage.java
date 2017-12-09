@@ -1,7 +1,6 @@
 package org.soraworld.fpm.message;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.Permission;
@@ -10,32 +9,18 @@ import java.util.HashMap;
 
 public class EntireMessage implements IMessage {
 
-    private Group base;
-    private HashMap<String, Group> groups;
-    private Permission permission;
+    private Group base = new Group();
+    private HashMap<String, Group> groups = new HashMap<>();
+    private Permission permission = new Permission();
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        System.out.println("fromBytes:" + buf.readByte());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufOutputStream output = new ByteBufOutputStream(buf);
-        output.writeByte();
-    }
-
-    private EntireMessage() {
-    }
-
-    public EntireMessage(Permission permission, Group base, HashMap<String, Group> groups) {
-        this.permission = permission;
-        this.base = base;
-        this.groups = groups;
-    }
-
-    public Permission getPermission() {
-        return permission;
+        System.out.println("toBytes:" + buf.writeByte(23));
     }
 
     public Group getBase() {
@@ -46,4 +31,13 @@ public class EntireMessage implements IMessage {
         return groups;
     }
 
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public void set(Group base, HashMap<String, Group> groups, Permission permission) {
+        if (base != null) this.base = base;
+        if (groups != null) this.groups = groups;
+        if (permission != null) this.permission = permission;
+    }
 }

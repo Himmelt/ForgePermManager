@@ -4,8 +4,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import org.soraworld.fpm.manager.ServerPermManager;
 import org.soraworld.fpm.proxy.CommonProxy;
+import org.soraworld.fpm.server.ServerPermManager;
 
 @Mod(
         modid = Constants.MOD_ID,

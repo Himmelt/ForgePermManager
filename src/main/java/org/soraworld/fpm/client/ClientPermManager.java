@@ -1,42 +1,39 @@
 package org.soraworld.fpm.client;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.soraworld.fpm.core.Group;
+import org.soraworld.fpm.core.GroupManager;
 import org.soraworld.fpm.core.Permission;
+import org.soraworld.fpm.message.EntireMessage;
 
 import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class ClientPermManager {
 
+    private static ClientPermManager instance;
+    private static final GroupManager manager = new GroupManager();
     private Permission permission = new Permission();
 
-    private static ClientPermManager instance;
-    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static ClientPermManager getInstance() {
         return instance == null ? instance = new ClientPermManager() : instance;
     }
 
-    public boolean has(String permission) {
-        return mc.player != null && this.permission.hasPerm(permission);
+    public boolean has(@Nonnull String permission) {
+        return false;
     }
 
     public void add(String permission) {
-        this.permission.addPerm(permission);
     }
 
     public void remove(String permission) {
-        this.permission.removePerm(permission);
     }
 
-    public void download(@Nonnull Permission permission) {
-        this.permission = permission;
+    public void download(@Nonnull EntireMessage entire) {
+        System.out.println(entire);
+        manager.set(entire.getBase(), entire.getGroups());
+        this.permission = entire.getPermission();
     }
 
-    public void download(@Nonnull Group group) {
-        this.permission = permission;
-    }
 }

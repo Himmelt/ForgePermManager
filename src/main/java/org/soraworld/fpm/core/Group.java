@@ -1,47 +1,24 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.data.IOMessage;
-import org.soraworld.fpm.manager.GroupManager;
-
-import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public class Group extends Node implements IOMessage {
+public final class Group {
 
-    private String display;
-    private final HashSet<Group> parents = new HashSet<>();
-    private static final GroupManager manager = GroupManager.getInstance();
+    private Node node;
+    private HashSet<String> parents;
 
-    public boolean hasParent(String parent) {
-        return parents.contains(manager.getGroup(parent));
+    public Group() {
+        node = new Node();
+        parents = new HashSet<>();
     }
 
-    public void addParent(String parent) {
-        if (manager.hasGroup(parent)) parents.add(manager.getGroup(parent));
-    }
-
-    public void removeParent(String parent) {
-        if (manager.hasGroup(parent)) parents.remove(manager.getGroup(parent));
-        // TODO 同步该组权限
-    }
-
-    @Override
-    public void write(DataOutput output) {
-
-    }
-
-    @Override
     public void read(DataInput input) {
 
     }
 
-    @Override
-    public boolean hasNodes(@Nonnull String[] nodes) {
-        for (Group parent : parents) {
-            if (parent.hasNodes(nodes)) return true;
-        }
-        return super.hasNodes(nodes);
+    public void write(DataOutput output) {
+
     }
 }

@@ -8,6 +8,9 @@ public final class Constants {
     public static final String CLIENT_PROXY = "org.soraworld.fpm.proxy.ClientProxy";
     public static final String SERVER_PROXY = "org.soraworld.fpm.proxy.ServerProxy";
 
-    public static final byte GROUP_HEAD
+
+    public static final byte FULL = 42;
+    public static final byte END = 0;
+    public static final String STAR = "*";
 
 }
