@@ -1,10 +1,13 @@
 package org.soraworld.fpm.message;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.Permission;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class EntireMessage implements IMessage {
@@ -15,12 +18,46 @@ public class EntireMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        System.out.println("fromBytes:" + buf.readByte());
+        ByteBufInputStream input = new ByteBufInputStream(buf);
+        try {
+            base.read(input);
+            byte size = input.readByte();
+            for (int i = 0; i < size; i++) {
+                byte length = input.readByte();
+                byte[] bytes = new byte[length];
+                input.readFully(bytes);
+                String name = new String(bytes);
+                Group group = new Group();
+                group.read(input);
+                if (!name.isEmpty() && !group.isEmpty()) {
+                    groups.put(name, group);
+                }
+            }
+            permission.read(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        System.out.println("toBytes:" + buf.writeByte(23));
+        ByteBufOutputStream output = new ByteBufOutputStream(buf);
+        try {
+            base.write(output);
+            output.writeByte(groups.size());
+            for (String name : groups.keySet()) {
+                Group group = groups.get(name);
+                if (name != null && !name.isEmpty() && group != null && !group.isEmpty()) {
+                    byte[] bytes = name.getBytes("UTF-8");
+                    output.writeByte(bytes.length);
+                    output.write(bytes);
+                    group.write(output);
+                }
+            }
+            permission.write(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Group getBase() {

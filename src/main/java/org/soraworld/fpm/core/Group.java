@@ -9,16 +9,15 @@ public class Group {
     private Node node;
     private HashSet<String> parents;
 
-    public Group() {
-        node = new Node();
-        parents = new HashSet<>();
-    }
-
     public void read(DataInput input) {
 
     }
 
     public void write(DataOutput output) {
 
+    }
+
+    public boolean isEmpty() {
+        return (node == null || node.isEmpty()) && (parents == null || parents.isEmpty());
     }
 }

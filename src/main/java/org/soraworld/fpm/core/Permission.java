@@ -5,8 +5,9 @@ import java.io.DataOutput;
 import java.util.HashSet;
 
 public class Permission {
-    public Node root;
-    public HashSet<String> groups;
+
+    private Node root;
+    private HashSet<String> groups;
 
     public void read(DataInput input) {
 

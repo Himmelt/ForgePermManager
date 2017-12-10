@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.soraworld.fpm.ForgePermManager;
 import org.soraworld.fpm.api.ServerManager;
 import org.soraworld.fpm.core.GroupManager;
-import org.soraworld.fpm.core.Node;
 import org.soraworld.fpm.core.Permission;
 import org.soraworld.fpm.manager.StorageManager;
 import org.soraworld.fpm.message.EntireMessage;
@@ -56,8 +55,6 @@ public class ServerPermManager implements ServerManager {
     public void sendEntire(EntityPlayerMP player) {
         EntireMessage message = new EntireMessage();
         Permission permission = players.get(player.getName());
-        permission.root = new Node();
-        permission.root.light = true;
         message.set(groupManager.getBase(), groupManager.getGroups(), permission);
         network.sendTo(message, player);
     }

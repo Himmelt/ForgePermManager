@@ -20,7 +20,6 @@ public class StorageManager {
     }
 
     public static void save(String player, Permission permission) {
-        System.out.println("Saving:" + player);
         if (permission == null) permission = new Permission();
         try {
             permission.write(new DataOutputStream(new FileOutputStream(player + ".dat")));
