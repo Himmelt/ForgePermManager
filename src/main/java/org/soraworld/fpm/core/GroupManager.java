@@ -13,4 +13,11 @@ public class GroupManager {
         this.groups = groups;
     }
 
+    public Group getBase() {
+        return base;
+    }
+
+    public HashMap<String, Group> getGroups() {
+        return groups;
+    }
 }

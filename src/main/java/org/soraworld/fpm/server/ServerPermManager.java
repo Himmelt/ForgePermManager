@@ -1,18 +1,26 @@
 package org.soraworld.fpm.server;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import org.soraworld.fpm.ForgePermManager;
+import org.soraworld.fpm.api.ServerManager;
 import org.soraworld.fpm.core.GroupManager;
+import org.soraworld.fpm.core.Node;
 import org.soraworld.fpm.core.Permission;
 import org.soraworld.fpm.manager.StorageManager;
+import org.soraworld.fpm.message.EntireMessage;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 
-public class ServerPermManager {
+public class ServerPermManager implements ServerManager {
+
+    private final GroupManager groupManager = new GroupManager();
+    private final HashMap<String, Permission> players = new HashMap<>();
+    private final SimpleNetworkWrapper network = ForgePermManager.getProxy().getNetwork();
 
     private static ServerPermManager instance;
-    private static final GroupManager manager = new GroupManager();
-    private static final HashMap<String, Permission> players = new HashMap<>();
 
     public static ServerPermManager getInstance() {
         return instance == null ? instance = new ServerPermManager() : instance;
@@ -45,4 +53,12 @@ public class ServerPermManager {
         }
     }
 
+    public void sendEntire(EntityPlayerMP player) {
+        EntireMessage message = new EntireMessage();
+        Permission permission = players.get(player.getName());
+        permission.root = new Node();
+        permission.root.light = true;
+        message.set(groupManager.getBase(), groupManager.getGroups(), permission);
+        network.sendTo(message, player);
+    }
 }

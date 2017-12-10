@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public final class Permission {
+public class Permission {
     public Node root;
     public HashSet<String> groups;
 

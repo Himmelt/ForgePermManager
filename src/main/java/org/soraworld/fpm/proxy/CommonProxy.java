@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.soraworld.fpm.Constants;
 import org.soraworld.fpm.handler.EventBusHandler;
+import org.soraworld.fpm.handler.FMLServerEventHandler;
 
 public class CommonProxy {
 
@@ -13,6 +14,7 @@ public class CommonProxy {
 
     public void registerEventHandler() {
         MinecraftForge.EVENT_BUS.register(new EventBusHandler());
+        MinecraftForge.EVENT_BUS.register(new FMLServerEventHandler());
     }
 
     public SimpleNetworkWrapper getNetwork() {

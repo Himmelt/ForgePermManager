@@ -5,10 +5,10 @@ import org.soraworld.fpm.Constants;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 
-public final class Node {
+public class Node {
 
     private boolean full = false;
-    private boolean light = false;
+    public boolean light = false;
     private HashMap<String, Node> children;
 
     public boolean has(@Nonnull String[] nodes) {

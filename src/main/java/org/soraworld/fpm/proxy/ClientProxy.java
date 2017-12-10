@@ -8,12 +8,13 @@ import org.soraworld.fpm.message.EntireMessage;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
+    private final ClientPermManager client = ClientPermManager.getInstance();
+
     @Override
     public void registerEventHandler() {
         super.registerEventHandler();
-        //MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         network.registerMessage((entire, ctx) -> {
-            ClientPermManager.getInstance().download(entire);
+            client.download(entire);
             return null;
         }, EntireMessage.class, MSG_ID++, Side.CLIENT);
     }

@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.HashSet;
 
-public final class Group {
+public class Group {
 
     private Node node;
     private HashSet<String> parents;

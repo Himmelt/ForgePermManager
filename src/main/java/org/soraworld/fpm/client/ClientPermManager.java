@@ -1,20 +1,18 @@
 package org.soraworld.fpm.client;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.fpm.api.ClientManager;
 import org.soraworld.fpm.core.GroupManager;
 import org.soraworld.fpm.core.Permission;
 import org.soraworld.fpm.message.EntireMessage;
 
 import javax.annotation.Nonnull;
 
-@SideOnly(Side.CLIENT)
-public class ClientPermManager {
+public class ClientPermManager implements ClientManager {
 
-    private static ClientPermManager instance;
-    private static final GroupManager manager = new GroupManager();
+    private final GroupManager manager = new GroupManager();
     private Permission permission = new Permission();
 
+    private static ClientPermManager instance;
 
     public static ClientPermManager getInstance() {
         return instance == null ? instance = new ClientPermManager() : instance;
