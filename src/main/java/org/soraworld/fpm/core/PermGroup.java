@@ -1,25 +1,24 @@
 package org.soraworld.fpm.core;
 
-import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashSet;
 
-public class Group {
+abstract class PermGroup {
 
     private Node node;
-    private HashSet<String> parents;
+    private HashSet<String> names;
 
     public void read(DataInput input) throws IOException {
         byte size = input.readByte();
         if (size > 0) {
-            parents = new HashSet<>();
+            names = new HashSet<>();
             while (size-- > 0) {
                 byte length = input.readByte();
                 byte[] bytes = new byte[length];
                 input.readFully(bytes);
-                parents.add(new String(bytes, "UTF-8"));
+                names.add(new String(bytes, "UTF-8"));
             }
         }
         if (input.readByte() == 1) {
@@ -29,11 +28,11 @@ public class Group {
     }
 
     public void write(DataOutput output) throws IOException {
-        if (parents == null || parents.size() == 0) {
+        if (names == null || names.size() == 0) {
             output.writeByte(0);
         } else {
-            output.writeByte(parents.size());
-            for (String parent : parents) {
+            output.writeByte(names.size());
+            for (String parent : names) {
                 byte[] bytes = parent.getBytes("UTF-8");
                 output.writeByte(bytes.length);
                 output.write(bytes);
@@ -48,15 +47,12 @@ public class Group {
     }
 
     public boolean isEmpty() {
-        return (node == null || node.isEmpty()) && (parents == null || parents.isEmpty());
+        return (node == null || node.isEmpty()) && (names == null || names.isEmpty());
     }
 
-    public void addParent(String parent) {
-        if (parents == null) parents = new HashSet<>();
-        parents.add(parent);
+    public void addName(String name) {
+        if (names == null) names = new HashSet<>();
+        names.add(name);
     }
 
-    public void setNode(@Nonnull Node node) {
-        this.node = node;
-    }
 }

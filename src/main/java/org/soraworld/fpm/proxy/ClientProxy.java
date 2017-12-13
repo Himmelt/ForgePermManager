@@ -4,6 +4,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.soraworld.fpm.client.ClientPermManager;
 import org.soraworld.fpm.message.EntireMessage;
+import org.soraworld.fpm.message.GroupMsg;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -17,5 +18,9 @@ public class ClientProxy extends CommonProxy {
             client.download(entire);
             return null;
         }, EntireMessage.class, MSG_ID++, Side.CLIENT);
+        network.registerMessage((entire, ctx) -> {
+            client.receiveNodeMsg(entire);
+            return null;
+        }, GroupMsg.class, MSG_ID++, Side.CLIENT);
     }
 }

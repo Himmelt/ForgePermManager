@@ -5,10 +5,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.soraworld.fpm.ForgePermManager;
 import org.soraworld.fpm.api.ServerManager;
+import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.GroupManager;
+import org.soraworld.fpm.core.Node;
 import org.soraworld.fpm.core.Permission;
 import org.soraworld.fpm.manager.StorageManager;
 import org.soraworld.fpm.message.EntireMessage;
+import org.soraworld.fpm.message.GroupMsg;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -57,5 +60,18 @@ public class ServerPermManager implements ServerManager {
         Permission permission = players.get(player.getName());
         message.set(groupManager.getBase(), groupManager.getGroups(), permission);
         network.sendTo(message, player);
+    }
+
+    public void sendGroup(EntityPlayerMP player) {
+        Node node = new Node();
+        node.addNodes("abc.d.e".split("\\."));
+        node.addNodes("mc.gm.c".split("\\."));
+        Group group = new Group();
+        group.addParent("parent1");
+        group.addParent("pt2");
+        group.setNode(node);
+        GroupMsg msg = new GroupMsg();
+        msg.setGroup(group);
+        network.sendTo(msg, player);
     }
 }

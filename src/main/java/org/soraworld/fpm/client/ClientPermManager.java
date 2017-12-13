@@ -1,9 +1,11 @@
 package org.soraworld.fpm.client;
 
 import org.soraworld.fpm.api.ClientManager;
+import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.GroupManager;
 import org.soraworld.fpm.core.Permission;
 import org.soraworld.fpm.message.EntireMessage;
+import org.soraworld.fpm.message.GroupMsg;
 
 import javax.annotation.Nonnull;
 
@@ -34,4 +36,7 @@ public class ClientPermManager implements ClientManager {
         this.permission = entire.getPermission();
     }
 
+    public void receiveNodeMsg(GroupMsg msg) {
+        Group group = msg.getGroup();
+    }
 }
