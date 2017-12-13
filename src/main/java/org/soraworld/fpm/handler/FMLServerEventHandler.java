@@ -12,7 +12,6 @@ public class FMLServerEventHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
-            System.out.println("PlayerLoggedInEvent:load:" + event.player.getName());
             server.load(event.player);
             server.sendEntire((EntityPlayerMP) event.player);
         }

@@ -5,9 +5,9 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashSet;
 
-abstract class PermGroup {
+abstract class PG {
 
-    private Node node;
+    Node node;
     private HashSet<String> names;
 
     public void read(DataInput input) throws IOException {

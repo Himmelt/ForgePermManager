@@ -3,7 +3,12 @@ package org.soraworld.fpm;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.soraworld.fpm.manager.StorageManager;
 import org.soraworld.fpm.proxy.CommonProxy;
 import org.soraworld.fpm.server.ServerPermManager;
 
@@ -12,14 +17,26 @@ import org.soraworld.fpm.server.ServerPermManager;
         name = Constants.MOD_NAME,
         version = Constants.MOD_VERSION
 )
-public class ForgePermManager {
+public class FPManager {
 
     @SidedProxy(clientSide = Constants.CLIENT_PROXY, serverSide = Constants.SERVER_PROXY)
     private static CommonProxy proxy;
 
+    public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
+
+    @Mod.EventHandler
+    public void Init(FMLPreInitializationEvent event) {
+        StorageManager.init(event.getModConfigurationDirectory());
+    }
+
     @Mod.EventHandler
     public void Init(FMLInitializationEvent event) {
         proxy.registerEventHandler();
+    }
+
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        ServerPermManager.getInstance().loadGroups();
     }
 
     @Mod.EventHandler

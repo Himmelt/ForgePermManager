@@ -3,7 +3,7 @@ package org.soraworld.fpm.server;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import org.soraworld.fpm.ForgePermManager;
+import org.soraworld.fpm.FPManager;
 import org.soraworld.fpm.api.ServerManager;
 import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.GroupManager;
@@ -20,7 +20,7 @@ public class ServerPermManager implements ServerManager {
 
     private final GroupManager groupManager = new GroupManager();
     private final HashMap<String, Permission> players = new HashMap<>();
-    private final SimpleNetworkWrapper network = ForgePermManager.getProxy().getNetwork();
+    private final SimpleNetworkWrapper network = FPManager.getProxy().getNetwork();
 
     private static ServerPermManager instance;
 
@@ -41,7 +41,13 @@ public class ServerPermManager implements ServerManager {
     }
 
     public void load(@Nonnull EntityPlayer player) {
+        FPManager.LOGGER.info("loading " + player.getName() + "'s permission ...");
         players.put(player.getName(), StorageManager.get(player));
+    }
+
+    public void loadGroups() {
+        FPManager.LOGGER.info("loading groups...");
+        groupManager.set(StorageManager.getBase(), StorageManager.getGroups());
     }
 
     public void unload(@Nonnull EntityPlayer player) {
@@ -50,6 +56,9 @@ public class ServerPermManager implements ServerManager {
     }
 
     public void saveAll() {
+        FPManager.LOGGER.info("saving groups ...");
+        StorageManager.saveGroups(groupManager.getBase(), groupManager.getGroups());
+        FPManager.LOGGER.info("saving players' permissions ...");
         for (String player : players.keySet()) {
             StorageManager.save(player, players.get(player));
         }
@@ -58,6 +67,7 @@ public class ServerPermManager implements ServerManager {
     public void sendEntire(EntityPlayerMP player) {
         EntireMessage message = new EntireMessage();
         Permission permission = players.get(player.getName());
+        permission.add("minecraft.abc");
         message.set(groupManager.getBase(), groupManager.getGroups(), permission);
         network.sendTo(message, player);
     }
@@ -67,11 +77,12 @@ public class ServerPermManager implements ServerManager {
         node.addNodes("abc.d.e".split("\\."));
         node.addNodes("mc.gm.c".split("\\."));
         Group group = new Group();
-        group.addParent("parent1");
-        group.addParent("pt2");
+        group.addName("parent1");
+        group.addName("pt2");
         group.setNode(node);
         GroupMsg msg = new GroupMsg();
         msg.setGroup(group);
         network.sendTo(msg, player);
     }
+
 }
