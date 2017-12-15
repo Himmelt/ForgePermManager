@@ -35,6 +35,12 @@ public class ServerPermManager implements ServerManager {
     }
 
     public void add(@Nonnull EntityPlayer player, String permission) {
+        Permission perm = players.get(player.getName());
+        if (perm == null) {
+            perm = new Permission();
+            players.put(player.getName(), perm);
+        }
+        perm.add(permission);
     }
 
     public void remove(@Nonnull EntityPlayer player, String permission) {

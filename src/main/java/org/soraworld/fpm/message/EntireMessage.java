@@ -8,6 +8,7 @@ import org.soraworld.fpm.core.Group;
 import org.soraworld.fpm.core.Permission;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class EntireMessage implements IMessage {
@@ -45,19 +46,22 @@ public class EntireMessage implements IMessage {
         try {
             base.write(output);
             output.writeByte(groups.size());
+            System.out.println(Arrays.toString(output.buffer().array()));
             for (String name : groups.keySet()) {
                 Group group = groups.get(name);
-                if (name != null && !name.isEmpty() && group != null && !group.isEmpty()) {
-                    byte[] bytes = name.getBytes("UTF-8");
-                    output.writeByte(bytes.length);
-                    output.write(bytes);
-                    group.write(output);
-                }
+                if (group == null) group = new Group();
+                if (name == null) name = "";
+                byte[] bytes = name.getBytes("UTF-8");
+                output.writeByte(bytes.length);
+                output.write(bytes);
+                group.write(output);
             }
+            System.out.println(Arrays.toString(output.buffer().array()));
             permission.write(output);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(Arrays.toString(output.buffer().array()));
     }
 
     public Group getBase() {
