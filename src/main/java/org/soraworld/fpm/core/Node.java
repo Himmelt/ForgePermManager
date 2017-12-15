@@ -69,7 +69,13 @@ public class Node {
     }
 
     private void addNodes(String[] nodes, int i) {
-        if (full || i >= nodes.length) return;
+        if (full) {
+            return;
+        }
+        if (i >= nodes.length) {
+            light = true;
+            return;
+        }
         if (Constants.STAR.equals(nodes[i])) {
             full = true;
             return;

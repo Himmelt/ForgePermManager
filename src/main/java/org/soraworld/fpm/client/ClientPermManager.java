@@ -8,6 +8,7 @@ import org.soraworld.fpm.message.EntireMessage;
 import org.soraworld.fpm.message.GroupMsg;
 
 import javax.annotation.Nonnull;
+import java.util.HashSet;
 
 public class ClientPermManager implements ClientManager {
 
@@ -21,7 +22,14 @@ public class ClientPermManager implements ClientManager {
     }
 
     public boolean has(@Nonnull String permission) {
-        return false;
+        if (!permission.matches("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*")) return false;
+        String[] nodes = permission.split("\\.");
+        if (manager.getBase().getNode().has(nodes)) return true;
+        HashSet<String> groups = this.permission.getGroups();
+        for (String name : groups) {
+            if (manager.hasPerm(name, nodes)) return true;
+        }
+        return this.permission.getNode().has(nodes);
     }
 
     public void add(String permission) {
@@ -31,7 +39,6 @@ public class ClientPermManager implements ClientManager {
     }
 
     public void download(@Nonnull EntireMessage entire) {
-        System.out.println(entire);
         manager.set(entire.getBase(), entire.getGroups());
         this.permission = entire.getPermission();
     }

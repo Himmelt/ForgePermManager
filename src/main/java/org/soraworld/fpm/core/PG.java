@@ -8,7 +8,25 @@ import java.util.HashSet;
 abstract class PG {
 
     Node node;
-    private HashSet<String> names;
+    HashSet<String> names;
+
+    public void add(String permission) {
+        // 权限正则格式
+        if (!permission.matches("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*")) return;
+        String[] nodes = permission.split("\\.");
+        if (node == null) node = new Node();
+        // 权限节点解析数组
+        node.addNodes(nodes);
+    }
+
+    public void remove(String permission) {
+        // 权限正则格式
+        if (!permission.matches("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*")) return;
+        String[] nodes = permission.split("\\.");
+        if (node != null) {
+            node.removeNodes(nodes);
+        }
+    }
 
     public void read(DataInput input) throws IOException {
         byte size = input.readByte();
@@ -55,4 +73,7 @@ abstract class PG {
         names.add(name);
     }
 
+    public Node getNode() {
+        return node != null ? node : new Node();
+    }
 }

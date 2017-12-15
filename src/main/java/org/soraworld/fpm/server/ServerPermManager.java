@@ -15,6 +15,7 @@ import org.soraworld.fpm.message.GroupMsg;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ServerPermManager implements ServerManager {
 
@@ -29,21 +30,22 @@ public class ServerPermManager implements ServerManager {
     }
 
     public boolean has(@Nonnull EntityPlayer player, String permission) {
-        if (!permission.matches("([a-zA-Z0-9_]+\\.)+(\\1|\\*)")) return false;
+        if (!permission.matches("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*")) return false;
         String[] nodes = permission.split("\\.");
-        return false;
+        if (groupManager.getBase().getNode().has(nodes)) return true;
+        HashSet<String> groups = get(player.getName()).getGroups();
+        for (String name : groups) {
+            if (groupManager.hasPerm(name, nodes)) return true;
+        }
+        return get(player.getName()).getNode().has(nodes);
     }
 
     public void add(@Nonnull EntityPlayer player, String permission) {
-        Permission perm = players.get(player.getName());
-        if (perm == null) {
-            perm = new Permission();
-            players.put(player.getName(), perm);
-        }
-        perm.add(permission);
+        get(player.getName()).add(permission);
     }
 
     public void remove(@Nonnull EntityPlayer player, String permission) {
+        get(player.getName()).remove(permission);
     }
 
     public void load(@Nonnull EntityPlayer player) {
@@ -91,4 +93,13 @@ public class ServerPermManager implements ServerManager {
         network.sendTo(msg, player);
     }
 
+    @Nonnull
+    private Permission get(String username) {
+        Permission perm = players.get(username);
+        if (perm == null) {
+            perm = new Permission();
+            players.put(username, perm);
+        }
+        return perm;
+    }
 }
