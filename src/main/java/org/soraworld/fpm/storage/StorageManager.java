@@ -1,24 +1,26 @@
-package org.soraworld.fpm.manager;
+package org.soraworld.fpm.storage;
 
+/*
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.io.FileUtils;
 import org.soraworld.fpm.Constants;
 import org.soraworld.fpm.FPManager;
 import org.soraworld.fpm.core.Group;
-import org.soraworld.fpm.core.Permission;
+import org.soraworld.fpm.core.PlayerPerm;
 
 import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.HashMap;
+*/
 
 public class StorageManager {
-
+/*
     private static File root = new File("data");
     private static File gRoot = new File("data/group");
 
     @Nonnull
-    public static Permission get(@Nonnull EntityPlayer player) {
-        Permission permission = new Permission();
+    public static PlayerPerm get(@Nonnull EntityPlayer player) {
+        PlayerPerm permission = new PlayerPerm();
         try {
             permission.read(new DataInputStream(new FileInputStream(new File(root, player.getName()))));
         } catch (IOException e) {
@@ -27,8 +29,8 @@ public class StorageManager {
         return permission;
     }
 
-    public static void save(String player, Permission permission) {
-        if (permission == null) permission = new Permission();
+    public static void save(String player, PlayerPerm permission) {
+        if (permission == null) permission = new PlayerPerm();
         try {
             permission.write(new DataOutputStream(FileUtils.openOutputStream(new File(root, player))));
         } catch (IOException e) {
@@ -37,7 +39,7 @@ public class StorageManager {
         }
     }
 
-    public static void save(@Nonnull EntityPlayer player, Permission permission) {
+    public static void save(@Nonnull EntityPlayer player, PlayerPerm permission) {
         save(player.getName(), permission);
     }
 
@@ -94,4 +96,6 @@ public class StorageManager {
         }
         return groups;
     }
+
+*/
 }

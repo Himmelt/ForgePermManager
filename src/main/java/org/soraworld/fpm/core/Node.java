@@ -1,11 +1,9 @@
 package org.soraworld.fpm.core;
 
-import org.soraworld.fpm.Constants;
-
-import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Node {
@@ -13,6 +11,7 @@ public class Node {
     private boolean full = false;
     private boolean light = false;
     private HashMap<String, Node> children;
+    private static final String STAR = "*";
 
     public void write(DataOutput output) throws IOException {
         output.writeByte(full ? (light ? 3 : 1) : (light ? 2 : 0));
@@ -54,55 +53,76 @@ public class Node {
         }
     }
 
-    public boolean has(@Nonnull String[] nodes) {
-        return full || has(nodes, 0);
+    public boolean hasNodes(ArrayList<String> nodes) {
+        return full || hasNodes(nodes, 0);
     }
 
-    private boolean has(String[] nodes, int i) {
-        return full || i >= nodes.length || children != null
-                && !children.isEmpty() && children.containsKey(nodes[i])
-                && children.get(nodes[i]).has(nodes, i + 1);
-    }
-
-    public void addNodes(String[] nodes) {
-        if (!full && nodes != null && nodes.length > 0) addNodes(nodes, 0);
-    }
-
-    private void addNodes(String[] nodes, int i) {
-        if (full) {
-            return;
+    private boolean hasNodes(ArrayList<String> nodes, int i) {
+        if (full || light && i >= nodes.size()) return true;
+        if (children != null && !children.isEmpty()) {
+            Node node = children.get(nodes.get(i));
+            if (node != null) return node.hasNodes(nodes, i + 1);
         }
-        if (i >= nodes.length) {
-            light = true;
-            return;
-        }
-        if (Constants.STAR.equals(nodes[i])) {
-            full = true;
-            return;
-        }
-        if (children == null) children = new HashMap<>();
-        if (!children.containsKey(nodes[i])) children.put(nodes[i], new Node());
-        children.get(nodes[i]).addNodes(nodes, i + 1);
+        return false;
     }
 
-    void removeNodes(String[] nodes) {
-        if (nodes != null && nodes.length > 0 && children != null && !children.isEmpty()) {
+    public void addNodes(ArrayList<String> nodes) {
+        if (!full && !nodes.isEmpty()) addNodes(nodes, 0);
+    }
+
+    private void addNodes(ArrayList<String> nodes, int i) {
+        if (!full) {
+            if (i >= nodes.size()) {
+                light = true;
+                return;
+            }
+            String str = nodes.get(i);
+            if (STAR.equals(str)) {
+                full = true;
+                return;
+            }
+            if (children == null) children = new HashMap<>();
+            Node node = children.get(str);
+            if (node == null) {
+                node = new Node();
+                children.put(str, node);
+            }
+            node.addNodes(nodes, i + 1);
+        }
+    }
+
+    public void removeNodes(ArrayList<String> nodes) {
+        if (nodes != null && !nodes.isEmpty() && children != null && !children.isEmpty()) {
             removeNodes(nodes, 0);
         }
     }
 
-    private void removeNodes(String[] nodes, int i) {
-        if (i >= nodes.length || children == null || children.isEmpty()) return;
-        if (Constants.STAR.equals(nodes[i])) {
+    private void removeNodes(ArrayList<String> nodes, int i) {
+        if (i >= nodes.size()) {
+            light = false;
+            return;
+        }
+        if (children == null || children.isEmpty()) {
+            return;
+        }
+        String str = nodes.get(i);
+        if (STAR.equals(str)) {
             full = false;
             children = null;
             return;
         }
-        if (children.containsKey(nodes[i])) children.get(nodes[i]).removeNodes(nodes, i + 1);
+        Node node = children.get(str);
+        if (node != null) {
+            node.removeNodes(nodes, i + 1);
+            if (node.isEmpty()) children.remove(str);
+        } else {
+            children.remove(str);
+        }
+        if (children.isEmpty()) children = null;
     }
 
-    public boolean isEmpty() {
-        return !full && (children == null || children.isEmpty());
+    private boolean isEmpty() {
+        return !full && !light && (children == null || children.isEmpty());
     }
 
 }

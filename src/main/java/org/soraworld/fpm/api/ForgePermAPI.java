@@ -1,19 +1,13 @@
 package org.soraworld.fpm.api;
 
-import org.soraworld.fpm.client.ClientPermManager;
-import org.soraworld.fpm.server.ServerPermManager;
+import org.soraworld.fpm.core.PermissionManager;
 
 public final class ForgePermAPI {
 
-    private static final ClientManager client = ClientPermManager.getInstance();
-    private static final ServerManager server = ServerPermManager.getInstance();
+    private static PermManager manager;
 
-    public static ClientManager getClientManager() {
-        return client;
-    }
-
-    public static ServerManager getServerManager() {
-        return server;
+    public static PermManager getPermManager() {
+        return manager == null ? manager = new PermissionManager() : manager;
     }
 
 }

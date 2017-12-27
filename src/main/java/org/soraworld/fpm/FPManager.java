@@ -8,10 +8,8 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.soraworld.fpm.command.CommandFPM;
-import org.soraworld.fpm.manager.StorageManager;
+import org.soraworld.fpm.command.ModCommand;
 import org.soraworld.fpm.proxy.CommonProxy;
-import org.soraworld.fpm.server.ServerPermManager;
 
 @Mod(
         modid = Constants.MOD_ID,
@@ -27,7 +25,6 @@ public class FPManager {
 
     @Mod.EventHandler
     public void Init(FMLPreInitializationEvent event) {
-        StorageManager.init(event.getModConfigurationDirectory());
     }
 
     @Mod.EventHandler
@@ -37,13 +34,13 @@ public class FPManager {
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new CommandFPM("fpm"));
-        ServerPermManager.getInstance().loadGroups();
+        event.registerServerCommand(new ModCommand("fpm"));
+        //ServerPermManager.getInstance().loadGroups();
     }
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        ServerPermManager.getInstance().saveAll();
+        //ServerPermManager.getInstance().saveAll();
     }
 
     public static CommonProxy getProxy() {
