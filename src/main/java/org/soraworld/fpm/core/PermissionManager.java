@@ -2,6 +2,8 @@ package org.soraworld.fpm.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 import org.soraworld.fpm.api.PermManager;
+import org.soraworld.fpm.config.ConfigManager;
+import org.soraworld.fpm.storage.StorageManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -10,10 +12,12 @@ import java.util.regex.Pattern;
 
 public class PermissionManager implements PermManager {
 
+    private StorageManager storageManager;
     private final GroupManager groupManager = new GroupManager();
     private final HashMap<String, PlayerPerm> players = new HashMap<>();
 
     private static final Pattern PERM_REGEX = Pattern.compile("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*");
+    private ConfigManager configManager;
 
     @Nonnull
     private PlayerPerm get(String username) {
@@ -101,6 +105,23 @@ public class PermissionManager implements PermManager {
         removePermGroup(player.getName(), group);
     }
 
+    public void setConfigManager(@Nonnull ConfigManager configManager) {
+        this.configManager = configManager;
+    }
+
+    public void setStorageManager(@Nonnull StorageManager storageManager) {
+        this.storageManager = storageManager;
+    }
+
+    public void loadGroups() {
+        String[] groups = configManager.getGroupNames();
+        if (groups != null && groups.length >= 1) {
+            for (String name : configManager.getGroupNames()) {
+                groupManager.addGroup(name, storageManager.getGroupFromFile(name));
+            }
+        }
+    }
+
     private static ArrayList<String> split_dot(String src) {
         ArrayList<String> list = new ArrayList<>();
         if (src != null) {
@@ -115,4 +136,6 @@ public class PermissionManager implements PermManager {
         }
         return list;
     }
+
+
 }

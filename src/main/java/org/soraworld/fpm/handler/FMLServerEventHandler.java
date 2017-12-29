@@ -10,7 +10,7 @@ public class FMLServerEventHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
-            //server.load(event.player);
+            //server.loadGroups(event.player);
             //server.sendEntire((EntityPlayerMP) event.player);
         }
     }

@@ -13,7 +13,21 @@ import java.io.*;
 import java.util.HashMap;
 */
 
+import org.soraworld.fpm.core.Group;
+
+import java.io.File;
+
 public class StorageManager {
+
+    private final File root;
+
+    public StorageManager(File root) {
+        this.root = root;
+    }
+
+    public Group getGroupFromFile(String name) {
+        return null;
+    }
 /*
     private static File root = new File("data");
     private static File gRoot = new File("data/group");

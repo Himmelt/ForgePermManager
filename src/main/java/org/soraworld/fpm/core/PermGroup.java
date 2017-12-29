@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class PermGroup {
+public class PermGroup implements Group {
 
     private Node root;
     private String name;
