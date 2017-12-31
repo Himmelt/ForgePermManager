@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.soraworld.fpm.api.ForgePermAPI;
 import org.soraworld.fpm.api.PermManager;
-import org.soraworld.fpm.config.ConfigManager;
+import org.soraworld.fpm.config.Config;
 import org.soraworld.fpm.core.PermissionManager;
 import org.soraworld.fpm.proxy.CommonProxy;
 import org.soraworld.fpm.storage.StorageManager;
@@ -32,7 +32,7 @@ public class FPManager {
         PermManager manager = ForgePermAPI.getPermManager();
         if (manager instanceof PermissionManager) {
             PermissionManager fpm = (PermissionManager) manager;
-            fpm.setConfigManager(new ConfigManager(event.getModConfigurationDirectory()));
+            fpm.setConfig(new Config(event.getModConfigurationDirectory()));
             fpm.setStorageManager(new StorageManager(event.getModConfigurationDirectory()));
             fpm.loadGroups();
         }

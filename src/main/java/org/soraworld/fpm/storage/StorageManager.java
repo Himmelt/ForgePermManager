@@ -71,13 +71,13 @@ public class StorageManager {
             FPManager.LOGGER.error("default group data file save/write failed!");
         }
         if (groups != null && groups.size() > 0) {
-            for (String name : groups.keySet()) {
-                Group group = groups.get(name);
+            for (String cat : groups.keySet()) {
+                Group group = groups.get(cat);
                 if (group != null) {
                     try {
-                        group.write(new DataOutputStream(FileUtils.openOutputStream(new File(gRoot, name))));
+                        group.write(new DataOutputStream(FileUtils.openOutputStream(new File(gRoot, cat))));
                     } catch (IOException e) {
-                        FPManager.LOGGER.error(name + " group data file save/write failed!");
+                        FPManager.LOGGER.error(cat + " group data file save/write failed!");
                     }
                 }
             }

@@ -28,11 +28,11 @@ public class EntireMessage /*implements IMessage */ {
                 byte length = input.readByte();
                 byte[] bytes = new byte[length];
                 input.readFully(bytes);
-                String name = new String(bytes);
+                String cat = new String(bytes);
                 Group group = new Group();
                 group.read(input);
-                if (!name.isEmpty() && !group.isEmpty()) {
-                    groups.put(name, group);
+                if (!cat.isEmpty() && !group.isEmpty()) {
+                    groups.put(cat, group);
                 }
             }
             permission.read(input);
@@ -47,11 +47,11 @@ public class EntireMessage /*implements IMessage */ {
         try {
             base.write(output);
             output.writeByte(groups.size());
-            for (String name : groups.keySet()) {
-                Group group = groups.get(name);
+            for (String cat : groups.keySet()) {
+                Group group = groups.get(cat);
                 if (group == null) group = new Group();
-                if (name == null) name = "";
-                byte[] bytes = name.getBytes("UTF-8");
+                if (cat == null) cat = "";
+                byte[] bytes = cat.getBytes("UTF-8");
                 output.writeByte(bytes.length);
                 output.write(bytes);
                 group.write(output);
