@@ -9,13 +9,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.soraworld.fpm.api.ForgePermAPI;
-import org.soraworld.fpm.api.PermManager;
-import org.soraworld.fpm.config.Config;
-import org.soraworld.fpm.core.PermissionManager;
 import org.soraworld.fpm.proxy.CommonProxy;
-import org.soraworld.fpm.storage.StorageManager;
-
-import java.io.File;
 
 @Mod(
         modid = Constants.MOD_ID,
@@ -31,13 +25,7 @@ public class FPManager {
 
     @Mod.EventHandler
     public void Init(FMLPreInitializationEvent event) {
-        PermManager manager = ForgePermAPI.getPermManager();
-        if (manager instanceof PermissionManager) {
-            PermissionManager fpm = (PermissionManager) manager;
-            fpm.setConfig(new Config(new File(event.getModConfigurationDirectory(), "fpm/settings.cfg"), Constants.MOD_VERSION));
-            fpm.setStorageManager(new StorageManager(event.getModConfigurationDirectory()));
-            fpm.loadGroups();
-        }
+        ForgePermAPI.getPermManager().initialize(event.getModConfigurationDirectory());
     }
 
     @Mod.EventHandler

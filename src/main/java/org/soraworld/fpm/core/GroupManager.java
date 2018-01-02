@@ -4,28 +4,30 @@ import java.util.HashMap;
 
 public class GroupManager {
 
-    private final UserGroup defaultGroup = new UserGroup("defaultGroup");
-    private final HashMap<String, Group> groups = new HashMap<>();
+    private final Permission defaultGroup = new Permission(this);
+    private final HashMap<String, Permission> groups = new HashMap<>();
 
-    public void addGroup(String name, Group group) {
-        if (name != null && group != null && !name.isEmpty()) {
-            if (group instanceof UserGroup) ((UserGroup) group).setName(name);
+    public void addGroup(String name, Permission group) {
+        if (name != null && group != null && !name.isEmpty() && !groups.containsKey(name)) {
             groups.put(name, group);
         }
     }
 
-    public UserGroup getUserGroup(String name) {
-        Group group = groups.get(name);
-        return group instanceof UserGroup ? (UserGroup) group : null;
+    public Permission getGroup(String name) {
+        return groups.get(name);
     }
 
-    public PermGroup getPermGroup(String name) {
-        Group group = groups.get(name);
-        return group instanceof PermGroup ? (PermGroup) group : null;
+    public void setGroup(String name, Permission group) {
+        if (name != null && group != null && !name.isEmpty()) {
+            groups.put(name, group);
+        }
     }
 
-    public UserGroup getDefaultGroup() {
+    public Permission getDefaultGroup() {
         return defaultGroup;
     }
 
+    public HashMap<String, Permission> getGroups() {
+        return groups;
+    }
 }

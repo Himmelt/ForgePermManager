@@ -22,7 +22,7 @@ public class Config extends AvalonConfig {
         return defaultPerms;
     }
 
-    public String[] getUserGroupNames() {
+    public String[] getGroupNames() {
         return userGroupNames;
     }
 

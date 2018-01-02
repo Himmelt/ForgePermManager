@@ -1,29 +1,49 @@
 package org.soraworld.fpm.core;
 
 import net.minecraft.entity.player.EntityPlayer;
+import org.soraworld.fpm.Constants;
 import org.soraworld.fpm.api.PermManager;
 import org.soraworld.fpm.config.Config;
 import org.soraworld.fpm.storage.StorageManager;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class PermissionManager implements PermManager {
 
+    private Config config;
+    private GroupManager groupManager;
     private StorageManager storageManager;
-    private final GroupManager groupManager = new GroupManager();
-    private final HashMap<String, PlayerPerm> players = new HashMap<>();
+    private HashMap<String, Permission> players;
 
     private static final Pattern PERM_REGEX = Pattern.compile("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*");
-    private Config config;
+
+    private boolean ready = false;
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void initialize(File root) {
+        config = new Config(new File(root, "fpm/settings.cfg"), Constants.MOD_VERSION);
+        groupManager = new GroupManager();
+        storageManager = new StorageManager(new File(root, "fpm"), groupManager);
+        players = new HashMap<>();
+        loadGroups();
+        groupManager.addGroup("test", new Permission(groupManager));
+        storageManager.saveGroups();
+        ready = true;
+    }
 
     @Nonnull
-    private PlayerPerm get(String username) {
-        PlayerPerm perm = players.get(username);
+    private Permission get(String username) {
+        // TODO 离线玩家处理
+        Permission perm = players.get(username);
         if (perm == null) {
-            perm = new PlayerPerm();
+            perm = new Permission(groupManager);
             players.put(username, perm);
         }
         return perm;
@@ -57,8 +77,30 @@ public class PermissionManager implements PermManager {
         removePermission(player.getName(), permission);
     }
 
+    @Override
+    public boolean groupHasPerm(String name, String permission) {
+        Permission group = groupManager.getGroup(name);
+        return PERM_REGEX.matcher(permission).matches() && group != null && group.hasNodes(split_dot(permission));
+    }
+
+    @Override
+    public void groupAddPerm(String name, String permission) {
+        Permission group = groupManager.getGroup(name);
+        if (PERM_REGEX.matcher(permission).matches() && group != null) {
+            group.addNodes(split_dot(permission));
+        }
+    }
+
+    @Override
+    public void groupRemovePerm(String name, String permission) {
+        Permission group = groupManager.getGroup(name);
+        if (PERM_REGEX.matcher(permission).matches() && group != null) {
+            group.removeNodes(split_dot(permission));
+        }
+    }
+
     public boolean inGroup(String player, String group) {
-        return get(player).inGroup(groupManager.getUserGroup(group));
+        return get(player).inGroup(group);
     }
 
     public boolean inGroup(EntityPlayer player, String group) {
@@ -66,43 +108,43 @@ public class PermissionManager implements PermManager {
     }
 
     public boolean inTheGroup(String player, String group) {
-        return get(player).inTheGroup(groupManager.getUserGroup(group));
+        return get(player).inTheGroup(group);
     }
 
     public boolean inTheGroup(EntityPlayer player, String group) {
         return inTheGroup(player.getName(), group);
     }
 
-    public boolean moveTo(String player, String group) {
-        return get(player).moveTo(groupManager.getUserGroup(group));
+    public void moveTo(String player, String group) {
+        get(player).moveTo(group);
     }
 
-    public boolean moveTo(EntityPlayer player, String group) {
-        return moveTo(player.getName(), group);
+    public void moveTo(EntityPlayer player, String group) {
+        moveTo(player.getName(), group);
     }
 
     public void moveToDefault(String player) {
-        get(player).moveTo(groupManager.getDefaultGroup());
+        get(player).moveTo(null);
     }
 
     public void moveToDefault(EntityPlayer player) {
         moveToDefault(player.getName());
     }
 
-    public boolean addPermGroup(String player, String group) {
-        return get(player).addPermGroup(groupManager.getPermGroup(group));
+    public void addSub(String player, String sub) {
+        get(player).addSub(sub);
     }
 
-    public boolean addPermGroup(EntityPlayer player, String group) {
-        return addPermGroup(player.getName(), group);
+    public void addSub(EntityPlayer player, String sub) {
+        addSub(player.getName(), sub);
     }
 
-    public void removePermGroup(String player, String group) {
-        get(player).removePermGroup(groupManager.getPermGroup(group));
+    public void removeSub(String player, String sub) {
+        get(player).removeSub(sub);
     }
 
-    public void removePermGroup(EntityPlayer player, String group) {
-        removePermGroup(player.getName(), group);
+    public void removeSub(EntityPlayer player, String sub) {
+        removeSub(player.getName(), sub);
     }
 
     public void setConfig(@Nonnull Config config) {
@@ -111,11 +153,7 @@ public class PermissionManager implements PermManager {
         config.save();
     }
 
-    public void setStorageManager(@Nonnull StorageManager storageManager) {
-        this.storageManager = storageManager;
-    }
-
-    public void loadGroups() {
+    private void loadGroups() {
         String[] strings = config.getDefaultPerms();
         if (strings != null && strings.length >= 1) {
             for (String perm : strings) {
@@ -124,16 +162,10 @@ public class PermissionManager implements PermManager {
                 }
             }
         }
-        strings = config.getUserGroupNames();
+        strings = config.getGroupNames();
         if (strings != null && strings.length >= 1) {
             for (String name : strings) {
-                groupManager.addGroup(name, storageManager.getUserGroupFromFile(name));
-            }
-        }
-        strings = config.getPermGroupNames();
-        if (strings != null && strings.length >= 1) {
-            for (String name : strings) {
-                groupManager.addGroup(name, storageManager.getPermGroupFromFile(name));
+                groupManager.addGroup(name, storageManager.getGroupFromFile(name));
             }
         }
     }

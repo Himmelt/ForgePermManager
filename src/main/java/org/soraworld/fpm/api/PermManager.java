@@ -2,7 +2,13 @@ package org.soraworld.fpm.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.io.File;
+
 public interface PermManager {
+
+    void initialize(File root);
+
+    boolean isReady();
 
     boolean hasPermission(String player, String permission);
 
@@ -16,6 +22,12 @@ public interface PermManager {
 
     void removePermission(EntityPlayer player, String permission);
 
+    boolean groupHasPerm(String group, String permission);
+
+    void groupAddPerm(String group, String permission);
+
+    void groupRemovePerm(String group, String permission);
+
     boolean inGroup(String player, String group);
 
     boolean inGroup(EntityPlayer player, String group);
@@ -24,20 +36,20 @@ public interface PermManager {
 
     boolean inTheGroup(EntityPlayer player, String group);
 
-    boolean moveTo(String player, String group);
+    void moveTo(String player, String group);
 
-    boolean moveTo(EntityPlayer player, String group);
+    void moveTo(EntityPlayer player, String group);
 
     void moveToDefault(String player);
 
     void moveToDefault(EntityPlayer player);
 
-    boolean addPermGroup(String player, String group);
+    void addSub(String player, String group);
 
-    boolean addPermGroup(EntityPlayer player, String group);
+    void addSub(EntityPlayer player, String group);
 
-    void removePermGroup(String player, String group);
+    void removeSub(String player, String group);
 
-    void removePermGroup(EntityPlayer player, String group);
+    void removeSub(EntityPlayer player, String group);
 
 }

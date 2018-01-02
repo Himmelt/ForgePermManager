@@ -1,38 +1,25 @@
 package org.soraworld.fpm.storage;
 
-/*
-import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.io.FileUtils;
-import org.soraworld.fpm.Constants;
-import org.soraworld.fpm.FPManager;
-import org.soraworld.fpm.core.Group;
-import org.soraworld.fpm.core.PlayerPerm;
+import org.soraworld.fpm.core.GroupManager;
+import org.soraworld.fpm.core.Permission;
 
-import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.HashMap;
-*/
-
-import org.soraworld.fpm.core.Group;
-import org.soraworld.fpm.core.PermGroup;
-import org.soraworld.fpm.core.UserGroup;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class StorageManager {
 
     private final File root;
+    private final GroupManager groupManager;
 
-    public StorageManager(File root) {
+    public StorageManager(File root, GroupManager groupManager) {
         this.root = root;
+        this.groupManager = groupManager;
     }
 
-    public Group getUserGroupFromFile(String name) {
-        File file = new File(root, "userGroups/" + name + ".dat");
-        UserGroup group = new UserGroup(name);
+    public Permission getGroupFromFile(String name) {
+        File file = new File(root, "groups/" + name + ".dat");
+        Permission group = new Permission(groupManager);
         try {
             group.read(new DataInputStream(new FileInputStream(file)));
         } catch (FileNotFoundException e) {
@@ -41,16 +28,22 @@ public class StorageManager {
         return group;
     }
 
-    public Group getPermGroupFromFile(String name) {
-        File file = new File(root, "permGroups/" + name + ".dat");
-        PermGroup group = new PermGroup(name);
-        try {
-            group.read(new DataInputStream(new FileInputStream(file)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    public void saveGroups() {
+        HashMap<String, Permission> groups = groupManager.getGroups();
+        for (String name : groups.keySet()) {
+            try {
+                File data = new File(root, "groups/" + name + ".dat");
+                if (!data.exists()) {
+                    FileUtils.forceMkdirParent(data);
+                    data.createNewFile();
+                }
+                groups.get(name).write(new DataOutputStream(new FileOutputStream(data)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return group;
     }
+
 /*
     private static File root = new File("data");
     private static File gRoot = new File("data/group");

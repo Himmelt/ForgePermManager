@@ -6,32 +6,33 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
-public class UserGroup implements Group {
+public class Permission {
 
-    private Node root;
-    private String name;
-    private String parentName;
-    private UserGroup parent;
+    private String parent;
+    private HashSet<String> subs;
     private HashMap<String, String> values;
+    private Node root;
+    private final GroupManager manager;
     private static final Pattern PERM_REGEX = Pattern.compile("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*");
 
-    public UserGroup(String name) {
-        this.name = name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        // TODO fix Null
-        return name;
+    public Permission(GroupManager manager) {
+        this.manager = manager;
     }
 
     public boolean hasNodes(@Nonnull ArrayList<String> nodes) {
-        return parent != null && parent.hasNodes(nodes) || root != null && root.hasNodes(nodes);
+        Permission group;
+        group = manager.getGroup(parent);
+        if (group != null && group.hasNodes(nodes)) return true;
+        if (subs != null) {
+            for (String sub : subs) {
+                group = manager.getGroup(sub);
+                if (group.hasNodes(nodes)) return true;
+            }
+        }
+        return root != null && root.hasNodes(nodes);
     }
 
     public void addNodes(@Nonnull ArrayList<String> nodes) {
@@ -41,25 +42,61 @@ public class UserGroup implements Group {
         }
     }
 
-    public boolean inherit(UserGroup group) {
-        return group != null && parent != null && (group == parent || parent.inherit(group));
+    public void removeNodes(@Nonnull ArrayList<String> nodes) {
+        if (!nodes.isEmpty() && root != null) {
+            root.removeNodes(nodes);
+        }
+    }
+
+    public boolean inTheGroup(String group) {
+        return parent != null && group != null && parent.equals(group);
+    }
+
+    public boolean inGroup(String group) {
+        if (inTheGroup(group)) return true;
+        Permission father = manager.getGroup(parent);
+        return father != null && father.inGroup(group);
+    }
+
+    public void moveTo(String group) {
+        parent = group;
+    }
+
+    public void addSub(String sub) {
+        subs.add(sub);
+    }
+
+    public void removeSub(String sub) {
+        subs.remove(sub);
     }
 
     public void read(DataInput input) {
         try {
-            byte length;
+            byte size, length;
             byte[] bytes;
             // parent
             length = input.readByte();
             if (length > 0) {
                 bytes = new byte[length];
                 input.readFully(bytes);
-                parentName = new String(bytes, "UTF-8");
+                parent = new String(bytes, "UTF-8");
             } else {
-                parentName = null;
+                parent = null;
+            }
+            // subs
+            size = input.readByte();
+            if (size > 0) {
+                for (int i = 0; i < size; i++) {
+                    length = input.readByte();
+                    bytes = new byte[length];
+                    input.readFully(bytes);
+                    subs.add(new String(bytes, "UTF-8"));
+                }
+            } else {
+                subs = null;
             }
             // values
-            byte size = input.readByte();
+            size = input.readByte();
             if (size > 0) {
                 for (int i = 0; i < size; i++) {
                     length = input.readByte();
@@ -76,7 +113,12 @@ public class UserGroup implements Group {
                 values = null;
             }
             // root
-            root.read(input);
+            if (input.readByte() == 1) {
+                root = new Node();
+                root.read(input);
+            } else {
+                root = null;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,9 +127,19 @@ public class UserGroup implements Group {
     public void write(DataOutput output) {
         try {
             // parent
-            if (parent != null && parent.name != null) {
-                output.writeByte(parent.name.length());
-                output.write(parent.name.getBytes("UTF-8"));
+            if (parent != null) {
+                output.writeByte(parent.length());
+                output.write(parent.getBytes("UTF-8"));
+            } else {
+                output.writeByte(0);
+            }
+            // subs
+            if (subs != null) {
+                output.writeByte(subs.size());
+                for (String sub : subs) {
+                    output.writeByte(sub.length());
+                    output.write(sub.getBytes("UTF-8"));
+                }
             } else {
                 output.writeByte(0);
             }
@@ -105,24 +157,14 @@ public class UserGroup implements Group {
                 output.writeByte(0);
             }
             // root
-            root.write(output);
+            if (root != null) {
+                output.writeByte(1);
+                root.write(output);
+            } else {
+                output.writeByte(0);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void setParent(UserGroup parent) {
-        this.parent = parent;
-    }
-
-    public UserGroup getParent() {
-        return parent;
-    }
-
-    public void addPerm(String permission) {
-        if (PERM_REGEX.matcher(permission).matches()) {
-            if (root == null) root = new Node();
-            root.addNodes(split_dot(permission));
         }
     }
 
