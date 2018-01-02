@@ -15,6 +15,8 @@ import org.soraworld.fpm.core.PermissionManager;
 import org.soraworld.fpm.proxy.CommonProxy;
 import org.soraworld.fpm.storage.StorageManager;
 
+import java.io.File;
+
 @Mod(
         modid = Constants.MOD_ID,
         name = Constants.MOD_NAME,
@@ -32,7 +34,7 @@ public class FPManager {
         PermManager manager = ForgePermAPI.getPermManager();
         if (manager instanceof PermissionManager) {
             PermissionManager fpm = (PermissionManager) manager;
-            fpm.setConfig(new Config(event.getModConfigurationDirectory()));
+            fpm.setConfig(new Config(new File(event.getModConfigurationDirectory(), "fpm/settings.cfg"), Constants.MOD_VERSION));
             fpm.setStorageManager(new StorageManager(event.getModConfigurationDirectory()));
             fpm.loadGroups();
         }

@@ -14,8 +14,13 @@ import java.util.HashMap;
 */
 
 import org.soraworld.fpm.core.Group;
+import org.soraworld.fpm.core.PermGroup;
+import org.soraworld.fpm.core.UserGroup;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class StorageManager {
 
@@ -25,8 +30,26 @@ public class StorageManager {
         this.root = root;
     }
 
-    public Group getGroupFromFile(String name) {
-        return null;
+    public Group getUserGroupFromFile(String name) {
+        File file = new File(root, "userGroups/" + name + ".dat");
+        UserGroup group = new UserGroup(name);
+        try {
+            group.read(new DataInputStream(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return group;
+    }
+
+    public Group getPermGroupFromFile(String name) {
+        File file = new File(root, "permGroups/" + name + ".dat");
+        PermGroup group = new PermGroup(name);
+        try {
+            group.read(new DataInputStream(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return group;
     }
 /*
     private static File root = new File("data");

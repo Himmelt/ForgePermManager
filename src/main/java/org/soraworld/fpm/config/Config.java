@@ -1,21 +1,32 @@
 package org.soraworld.fpm.config;
 
+import org.soraworld.avalon.config.AvalonConfig;
+import org.soraworld.avalon.config.AvalonProperty;
+
 import java.io.File;
 
-public class Config extends AbstractConfig {
+public class Config extends AvalonConfig {
 
-    @AvalonProperty(cat = "test", key = "key")
-    private String test = "test value";
-    @AvalonProperty(cat = "groupNames", key = "key")
-    private String groupNames = "groupNames value";
+    @AvalonProperty(key = "defaultPerms", comment = "默认用户组权限列表")
+    private String[] defaultPerms;
+    @AvalonProperty(key = "userGroupNames", comment = "可加载的用户组")
+    private String[] userGroupNames;
+    @AvalonProperty(key = "permGroupNames", comment = "可加载的权限组")
+    private String[] permGroupNames;
 
-    public Config(File file) {
-        super(file);
+    public Config(File file, String version) {
+        super(file, version);
     }
 
-    public String[] getGroupNames() {
-        String[] strings = new String[1];
-        strings[0] = groupNames;
-        return strings;
+    public String[] getDefaultPerms() {
+        return defaultPerms;
+    }
+
+    public String[] getUserGroupNames() {
+        return userGroupNames;
+    }
+
+    public String[] getPermGroupNames() {
+        return permGroupNames;
     }
 }

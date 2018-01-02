@@ -108,6 +108,7 @@ public class PermissionManager implements PermManager {
     public void setConfig(@Nonnull Config config) {
         this.config = config;
         config.load();
+        config.save();
     }
 
     public void setStorageManager(@Nonnull StorageManager storageManager) {
@@ -115,10 +116,24 @@ public class PermissionManager implements PermManager {
     }
 
     public void loadGroups() {
-        String[] groups = config.getGroupNames();
-        if (groups != null && groups.length >= 1) {
-            for (String name : config.getGroupNames()) {
-                groupManager.addGroup(name, storageManager.getGroupFromFile(name));
+        String[] strings = config.getDefaultPerms();
+        if (strings != null && strings.length >= 1) {
+            for (String perm : strings) {
+                if (PERM_REGEX.matcher(perm).matches()) {
+                    groupManager.getDefaultGroup().addNodes(split_dot(perm));
+                }
+            }
+        }
+        strings = config.getUserGroupNames();
+        if (strings != null && strings.length >= 1) {
+            for (String name : strings) {
+                groupManager.addGroup(name, storageManager.getUserGroupFromFile(name));
+            }
+        }
+        strings = config.getPermGroupNames();
+        if (strings != null && strings.length >= 1) {
+            for (String name : strings) {
+                groupManager.addGroup(name, storageManager.getPermGroupFromFile(name));
             }
         }
     }
@@ -137,6 +152,5 @@ public class PermissionManager implements PermManager {
         }
         return list;
     }
-
 
 }

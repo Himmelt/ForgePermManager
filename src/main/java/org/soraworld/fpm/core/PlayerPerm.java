@@ -1,6 +1,9 @@
 package org.soraworld.fpm.core;
 
 import javax.annotation.Nonnull;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,6 +66,22 @@ public class PlayerPerm {
     public void removePermGroup(PermGroup permGroup) {
         if (permGroups != null) {
             permGroups.remove(permGroup);
+        }
+    }
+
+    public void read(DataInput input) {
+        try {
+            root.read(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void write(DataOutput output) {
+        try {
+            root.write(output);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
