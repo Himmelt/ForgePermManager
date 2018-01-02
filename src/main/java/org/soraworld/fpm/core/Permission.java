@@ -63,11 +63,21 @@ public class Permission {
     }
 
     public void addSub(String sub) {
+        if (subs == null) subs = new HashSet<>();
         subs.add(sub);
     }
 
     public void removeSub(String sub) {
-        subs.remove(sub);
+        if (subs != null) subs.remove(sub);
+    }
+
+    public void setValue(String key, String value) {
+        if (values == null) values = new HashMap<>();
+        values.put(key, value);
+    }
+
+    public void delValue(String key) {
+        if (values != null) values.remove(key);
     }
 
     public void read(DataInput input) {
@@ -86,6 +96,7 @@ public class Permission {
             // subs
             size = input.readByte();
             if (size > 0) {
+                if (subs == null) subs = new HashSet<>();
                 for (int i = 0; i < size; i++) {
                     length = input.readByte();
                     bytes = new byte[length];
@@ -98,6 +109,7 @@ public class Permission {
             // values
             size = input.readByte();
             if (size > 0) {
+                values = new HashMap<>();
                 for (int i = 0; i < size; i++) {
                     length = input.readByte();
                     bytes = new byte[length];

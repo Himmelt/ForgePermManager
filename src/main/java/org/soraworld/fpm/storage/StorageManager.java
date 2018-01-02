@@ -28,6 +28,22 @@ public class StorageManager {
         return group;
     }
 
+    public void saveGroup(String name) {
+        Permission group = groupManager.getGroup(name);
+        if (group != null) {
+            File file = new File(root, "groups/" + name + ".dat");
+            try {
+                if (!file.exists()) {
+                    FileUtils.forceMkdirParent(file);
+                    file.createNewFile();
+                }
+                group.write(new DataOutputStream(new FileOutputStream(file)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void saveGroups() {
         HashMap<String, Permission> groups = groupManager.getGroups();
         for (String name : groups.keySet()) {

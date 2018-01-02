@@ -1,6 +1,8 @@
 package org.soraworld.fpm.api;
 
 import net.minecraft.entity.player.EntityPlayer;
+import org.soraworld.fpm.core.GroupManager;
+import org.soraworld.fpm.storage.StorageManager;
 
 import java.io.File;
 
@@ -51,5 +53,9 @@ public interface PermManager {
     void removeSub(String player, String group);
 
     void removeSub(EntityPlayer player, String group);
+
+    GroupManager getGroupManager();
+
+    StorageManager getStorageManager();
 
 }

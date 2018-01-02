@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 public class PermissionManager implements PermManager {
 
     private Config config;
+
+
     private GroupManager groupManager;
     private StorageManager storageManager;
     private HashMap<String, Permission> players;
@@ -145,6 +147,14 @@ public class PermissionManager implements PermManager {
 
     public void removeSub(EntityPlayer player, String sub) {
         removeSub(player.getName(), sub);
+    }
+
+    public GroupManager getGroupManager() {
+        return groupManager;
+    }
+
+    public StorageManager getStorageManager() {
+        return storageManager;
     }
 
     public void setConfig(@Nonnull Config config) {
