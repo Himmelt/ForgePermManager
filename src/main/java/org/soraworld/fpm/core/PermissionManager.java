@@ -1,6 +1,5 @@
 package org.soraworld.fpm.core;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import org.soraworld.fpm.api.PermManager;
 import org.soraworld.fpm.config.Config;
@@ -30,9 +29,13 @@ public class PermissionManager implements PermManager {
         config.save();
     }
 
-    private Permission getPlayer(String username) {
+    public Permission getPlayer(String username) {
         // TODO 离线玩家处理
         return players.get(username);
+    }
+
+    public Permission getGroup(String groupName) {
+        return groups.get(groupName);
     }
 
     public boolean hasUserPerm(String username, String perm) {
@@ -102,14 +105,6 @@ public class PermissionManager implements PermManager {
         }
     }
 
-    public boolean inGroup(String player, String group) {
-        return getPlayer(player).inGroup(group);
-    }
-
-    public boolean inTheGroup(String player, String group) {
-        return getPlayer(player).inTheGroup(group);
-    }
-
     public void moveTo(String player, String group) {
         getPlayer(player).moveTo(group);
     }
@@ -135,14 +130,14 @@ public class PermissionManager implements PermManager {
         if (strings != null && strings.length >= 1) {
             for (String perm : strings) {
                 if (PERM_REGEX.matcher(perm).matches()) {
-                    groupManager.getDefaultGroup().addNodes(split_dot(perm));
+                    defaultGroup.addNodes(split_dot(perm));
                 }
             }
         }
         strings = config.getGroupNames();
         if (strings != null && strings.length >= 1) {
             for (String name : strings) {
-                groupManager.addGroup(name, storage.getGroupFromFile(name));
+                addGroup(name, storage.getGroupFromFile(name));
             }
         }
     }
@@ -166,10 +161,6 @@ public class PermissionManager implements PermManager {
         return groups.containsKey(name);
     }
 
-    public Permission getGroup(String name) {
-        return groups.get(name);
-    }
-
     public void addGroup(String name, Permission group) {
         if (name != null && group != null && !name.isEmpty() && !groups.containsKey(name)) {
             groups.put(name, group);
@@ -184,6 +175,14 @@ public class PermissionManager implements PermManager {
 
     public void removeGroup(String name) {
         groups.remove(name);
+    }
+
+    public void saveGroup(String groupname) {
+        storage.saveGroup(groupname, groups.get(groupname));
+    }
+
+    public void saveGroupJson(String groupname) {
+        storage.saveGroupJson(groupname, groups.get(groupname));
     }
 
     public Permission getDefaultGroup() {

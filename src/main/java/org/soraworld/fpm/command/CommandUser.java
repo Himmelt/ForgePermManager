@@ -1,17 +1,15 @@
 package org.soraworld.fpm.command;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.TextComponentString;
 import org.soraworld.avalon.command.AvalonCommand;
 import org.soraworld.fpm.api.ForgePermAPI;
-import org.soraworld.fpm.core.GroupManager;
-import org.soraworld.fpm.core.Permission;
+import org.soraworld.fpm.api.PermManager;
 
 import java.util.ArrayList;
 
 public class CommandUser extends AvalonCommand {
 
-    private final GroupManager groupManager = ForgePermAPI.getPermManager().getGroupManager();
+    private final PermManager permManager = ForgePermAPI.getPermManager();
 
     protected CommandUser(String name, String... aliases) {
         super(name, aliases);
@@ -25,12 +23,12 @@ public class CommandUser extends AvalonCommand {
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }
         });
-        addSub(new AvalonCommand("setparent","setpa") {
+        addSub(new AvalonCommand("setparent", "setpa") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }
         });
-        addSub(new AvalonCommand("delparent","delpa") {
+        addSub(new AvalonCommand("delparent", "delpa") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }
@@ -45,12 +43,12 @@ public class CommandUser extends AvalonCommand {
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }
         });
-        addSub(new AvalonCommand("setvalue","setv") {
+        addSub(new AvalonCommand("setvalue", "setv") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }
         });
-        addSub(new AvalonCommand("delvalue","delv") {
+        addSub(new AvalonCommand("delvalue", "delv") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
             }

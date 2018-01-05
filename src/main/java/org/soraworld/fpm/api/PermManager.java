@@ -1,6 +1,12 @@
 package org.soraworld.fpm.api;
 
+import org.soraworld.fpm.core.Permission;
+
 public interface PermManager {
+
+    Permission getPlayer(String username);
+
+    Permission getGroup(String groupName);
 
     boolean hasUserPerm(String player, String permission);
 
@@ -14,9 +20,9 @@ public interface PermManager {
 
     void delGroupPerm(String group, String permission);
 
-    boolean inGroup(String player, String group);
+    // boolean inGroup(String player, String group);
 
-    boolean inTheGroup(String player, String group);
+    // boolean inTheGroup(String player, String group);
 
     void moveTo(String player, String group);
 
@@ -26,4 +32,13 @@ public interface PermManager {
 
     void delSub(String player, String group);
 
+    boolean hasGroup(String groupname);
+
+    void setGroup(String groupname, Permission group);
+
+    void removeGroup(String groupname);
+
+    void saveGroup(String groupname);
+
+    void saveGroupJson(String groupname);
 }

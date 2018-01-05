@@ -12,40 +12,30 @@ import java.util.HashSet;
 
 public class Permission {
 
-    @SerializedName(">")
+    @SerializedName("parent")
     private String parent;
-    @SerializedName(">>")
+    @SerializedName("subs")
     private HashSet<String> subs;
-    @SerializedName("<>")
+    @SerializedName("values")
     private HashMap<String, String> values;
-    @SerializedName("-")
-    private Node root;
+    @SerializedName("node")
+    private Node node;
 
     public boolean hasNodes(@Nonnull ArrayList<String> nodes) {
-        return root != null && root.hasNodes(nodes);
+        return node != null && node.hasNodes(nodes);
     }
 
     public void addNodes(@Nonnull ArrayList<String> nodes) {
         if (!nodes.isEmpty()) {
-            if (root == null) root = new Node();
-            root.addNodes(nodes);
+            if (node == null) node = new Node();
+            node.addNodes(nodes);
         }
     }
 
     public void removeNodes(@Nonnull ArrayList<String> nodes) {
-        if (!nodes.isEmpty() && root != null) {
-            root.removeNodes(nodes);
+        if (!nodes.isEmpty() && node != null) {
+            node.removeNodes(nodes);
         }
-    }
-
-    public boolean inTheGroup(String group) {
-        return parent != null && group != null && parent.equals(group);
-    }
-
-    public boolean inGroup(String group) {
-        if (inTheGroup(group)) return true;
-        Permission father = manager.getGroup(parent);
-        return father != null && father.inGroup(group);
     }
 
     public void moveTo(String group) {
@@ -114,12 +104,12 @@ public class Permission {
             } else {
                 values = null;
             }
-            // root
+            // node
             if (input.readByte() == 1) {
-                root = new Node();
-                root.read(input);
+                node = new Node();
+                node.read(input);
             } else {
-                root = null;
+                node = null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,10 +148,10 @@ public class Permission {
             } else {
                 output.writeByte(0);
             }
-            // root
-            if (root != null) {
+            // node
+            if (node != null) {
                 output.writeByte(1);
-                root.write(output);
+                node.write(output);
             } else {
                 output.writeByte(0);
             }

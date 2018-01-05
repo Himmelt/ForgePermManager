@@ -1,13 +1,15 @@
 package org.soraworld.fpm.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.HashMap;
 
 public class StorageManager {
 
     private final File root;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public StorageManager(File root) {
         this.root = root;
@@ -24,10 +26,9 @@ public class StorageManager {
         return group;
     }
 
-    public void saveGroup(String name) {
-        Permission group = groupManager.getGroup(name);
-        if (group != null) {
-            File file = new File(root, "groups/" + name + ".dat");
+    public void savePlayer(String username, Permission group) {
+        if (username != null && !username.isEmpty() && group != null) {
+            File file = new File(root, "players/" + username + ".dat");
             try {
                 if (!file.exists()) {
                     FileUtils.forceMkdirParent(file);
@@ -40,16 +41,35 @@ public class StorageManager {
         }
     }
 
-    public void saveGroups() {
-        HashMap<String, Permission> groups = groupManager.getGroups();
-        for (String name : groups.keySet()) {
+    public void saveGroup(String groupname, Permission group) {
+        if (groupname != null && !groupname.isEmpty() && group != null) {
+            File file = new File(root, "groups/" + groupname + ".dat");
             try {
-                File data = new File(root, "groups/" + name + ".dat");
-                if (!data.exists()) {
-                    FileUtils.forceMkdirParent(data);
-                    data.createNewFile();
+                if (!file.exists()) {
+                    FileUtils.forceMkdirParent(file);
+                    file.createNewFile();
                 }
-                groups.get(name).write(new DataOutputStream(new FileOutputStream(data)));
+                group.write(new DataOutputStream(new FileOutputStream(file)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void savePlayerJson(String username, Permission player) {
+        if (username != null && !username.isEmpty() && player != null) {
+            try {
+                FileUtils.writeStringToFile(new File(root, "players/" + username + ".json"), GSON.toJson(player), "UTF-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveGroupJson(String groupname, Permission group) {
+        if (groupname != null && !groupname.isEmpty() && group != null) {
+            try {
+                FileUtils.writeStringToFile(new File(root, "groups/" + groupname + ".json"), GSON.toJson(group), "UTF-8");
             } catch (IOException e) {
                 e.printStackTrace();
             }
