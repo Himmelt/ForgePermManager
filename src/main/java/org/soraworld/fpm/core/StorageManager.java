@@ -1,8 +1,6 @@
-package org.soraworld.fpm.storage;
+package org.soraworld.fpm.core;
 
 import org.apache.commons.io.FileUtils;
-import org.soraworld.fpm.core.GroupManager;
-import org.soraworld.fpm.core.Permission;
 
 import java.io.*;
 import java.util.HashMap;
@@ -10,16 +8,14 @@ import java.util.HashMap;
 public class StorageManager {
 
     private final File root;
-    private final GroupManager groupManager;
 
-    public StorageManager(File root, GroupManager groupManager) {
+    public StorageManager(File root) {
         this.root = root;
-        this.groupManager = groupManager;
     }
 
     public Permission getGroupFromFile(String name) {
         File file = new File(root, "groups/" + name + ".dat");
-        Permission group = new Permission(groupManager);
+        Permission group = new Permission();
         try {
             group.read(new DataInputStream(new FileInputStream(file)));
         } catch (FileNotFoundException e) {

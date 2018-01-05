@@ -8,8 +8,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.soraworld.fpm.api.ForgePermAPI;
-import org.soraworld.fpm.command.ModCommand;
+import org.soraworld.fpm.command.CommandForgePerm;
 import org.soraworld.fpm.proxy.CommonProxy;
 
 @Mod(
@@ -25,8 +24,8 @@ public class FPManager {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
     @Mod.EventHandler
-    public void Init(FMLPreInitializationEvent event) {
-        ForgePermAPI.getPermManager().initialize(event.getModConfigurationDirectory());
+    public void preInit(FMLPreInitializationEvent event) {
+        proxy.preInit(event);
     }
 
     @Mod.EventHandler
@@ -36,7 +35,7 @@ public class FPManager {
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new ModCommand("fpm"));
+        event.registerServerCommand(new CommandForgePerm("fpm"));
         //ServerPermManager.getInstance().loadGroups();
     }
 

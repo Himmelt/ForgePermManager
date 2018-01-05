@@ -46,7 +46,7 @@ public class CommandGroup extends AvalonCommand {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 2) {
-                    ForgePermAPI.getPermManager().groupAddPerm(args.get(0), args.get(1));
+                    ForgePermAPI.getPermManager().addGroupPerm(args.get(0), args.get(1));
                     sender.sendMessage(new TextComponentString("addp success!"));
                 } else {
                     sender.sendMessage(new TextComponentString("invalid parameters!"));
@@ -57,14 +57,14 @@ public class CommandGroup extends AvalonCommand {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 2) {
-                    ForgePermAPI.getPermManager().groupRemovePerm(args.get(0), args.get(1));
+                    ForgePermAPI.getPermManager().delGroupPerm(args.get(0), args.get(1));
                     sender.sendMessage(new TextComponentString("delp success!"));
                 } else {
                     sender.sendMessage(new TextComponentString("invalid parameters!"));
                 }
             }
         });
-        addSub(new AvalonCommand("setparent") {
+        addSub(new AvalonCommand("setparent","setpa") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 2) {
@@ -75,7 +75,7 @@ public class CommandGroup extends AvalonCommand {
                 }
             }
         });
-        addSub(new AvalonCommand("delparent") {
+        addSub(new AvalonCommand("delparent","delpa") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 1) {
@@ -108,7 +108,7 @@ public class CommandGroup extends AvalonCommand {
                 }
             }
         });
-        addSub(new AvalonCommand("setvalue") {
+        addSub(new AvalonCommand("setvalue","setv") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 3) {
@@ -119,7 +119,7 @@ public class CommandGroup extends AvalonCommand {
                 }
             }
         });
-        addSub(new AvalonCommand("delvalue") {
+        addSub(new AvalonCommand("delvalue","delv") {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 2) {
@@ -134,11 +134,21 @@ public class CommandGroup extends AvalonCommand {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 1) {
-                    ForgePermAPI.getPermManager().getStorageManager().saveGroup(args.get(0));
+                    ForgePermAPI.getPermManager().getStorage().saveGroup(args.get(0));
                     sender.sendMessage(new TextComponentString("save success!"));
                 } else {
                     sender.sendMessage(new TextComponentString("invalid parameters!"));
                 }
+            }
+        });
+        addSub(new AvalonCommand("export") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
+            }
+        });
+        addSub(new AvalonCommand("import") {
+            @Override
+            public void execute(ICommandSender sender, ArrayList<String> args) {
             }
         });
     }

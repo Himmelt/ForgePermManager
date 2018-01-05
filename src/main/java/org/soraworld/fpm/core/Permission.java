@@ -1,5 +1,7 @@
 package org.soraworld.fpm.core;
 
+import com.google.gson.annotations.SerializedName;
+
 import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -7,31 +9,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 
 public class Permission {
 
+    @SerializedName(">")
     private String parent;
+    @SerializedName(">>")
     private HashSet<String> subs;
+    @SerializedName("<>")
     private HashMap<String, String> values;
+    @SerializedName("-")
     private Node root;
-    private final GroupManager manager;
-    private static final Pattern PERM_REGEX = Pattern.compile("[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*(\\.\\*)*");
-
-    public Permission(GroupManager manager) {
-        this.manager = manager;
-    }
 
     public boolean hasNodes(@Nonnull ArrayList<String> nodes) {
-        Permission group;
-        group = manager.getGroup(parent);
-        if (group != null && group.hasNodes(nodes)) return true;
-        if (subs != null) {
-            for (String sub : subs) {
-                group = manager.getGroup(sub);
-                if (group.hasNodes(nodes)) return true;
-            }
-        }
         return root != null && root.hasNodes(nodes);
     }
 
@@ -180,19 +170,11 @@ public class Permission {
         }
     }
 
-    private static ArrayList<String> split_dot(String src) {
-        ArrayList<String> list = new ArrayList<>();
-        if (src != null) {
-            int i, last = -1, length = src.length();
-            for (i = 0; i < length; i++) {
-                if (src.charAt(i) == '.') {
-                    if (i > last + 1) list.add(src.substring(last + 1, i));
-                    last = i;
-                }
-            }
-            if (i > last + 1) list.add(src.substring(last + 1, i));
-        }
-        return list;
+    public String getParent() {
+        return parent;
     }
 
+    public HashSet<String> getSubs() {
+        return subs;
+    }
 }

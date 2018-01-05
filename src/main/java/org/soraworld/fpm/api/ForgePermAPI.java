@@ -1,13 +1,19 @@
 package org.soraworld.fpm.api;
 
-import org.soraworld.fpm.core.PermissionManager;
-
 public final class ForgePermAPI {
 
     private static PermManager manager;
 
+    public static boolean isReady() {
+        return manager != null;
+    }
+
     public static PermManager getPermManager() {
-        return manager == null ? manager = new PermissionManager() : manager;
+        return manager;
+    }
+
+    public static void setPermManager(PermManager manager) {
+        ForgePermAPI.manager = manager;
     }
 
 }

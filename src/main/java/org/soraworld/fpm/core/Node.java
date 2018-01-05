@@ -1,5 +1,7 @@
 package org.soraworld.fpm.core;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -8,10 +10,13 @@ import java.util.HashMap;
 
 public class Node {
 
+    @SerializedName("*")
     private boolean full = false;
+    @SerializedName("+")
     private boolean light = false;
+    @SerializedName("-")
     private HashMap<String, Node> children;
-    private static final String STAR = "*";
+    private transient static final String STAR = "*";
 
     public void write(DataOutput output) throws IOException {
         output.writeByte(full ? (light ? 3 : 1) : (light ? 2 : 0));

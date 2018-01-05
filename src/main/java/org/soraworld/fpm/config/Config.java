@@ -14,8 +14,8 @@ public class Config extends AvalonConfig {
     @AvalonProperty(key = "permGroupNames", comment = "可加载的权限组")
     private String[] permGroupNames;
 
-    public Config(File file, String version) {
-        super(file, version);
+    public Config(File file) {
+        super(file);
     }
 
     public String[] getDefaultPerms() {

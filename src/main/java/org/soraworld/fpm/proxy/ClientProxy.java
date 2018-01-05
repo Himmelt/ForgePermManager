@@ -1,7 +1,12 @@
 package org.soraworld.fpm.proxy;
 
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.soraworld.fpm.api.ForgePermAPI;
+import org.soraworld.fpm.core.PermissionManager;
+
+import java.io.File;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -19,4 +24,10 @@ public class ClientProxy extends CommonProxy {
             return null;
         }, GroupMsg.class, MSG_ID++, Side.CLIENT);
     }*/
+
+    public void preInit(FMLPreInitializationEvent event) {
+        permManager = new PermissionManager(new File(event.getModConfigurationDirectory(), "fpm"), Side.CLIENT);
+        ForgePermAPI.setPermManager(permManager);
+    }
+
 }
