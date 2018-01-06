@@ -10,11 +10,11 @@ import java.util.HashMap;
 
 public class Node {
 
-    @SerializedName("*")
+    @SerializedName("full")
     private boolean full = false;
-    @SerializedName("+")
+    @SerializedName("light")
     private boolean light = false;
-    @SerializedName("-")
+    @SerializedName("nodes")
     private HashMap<String, Node> children;
     private transient static final String STAR = "*";
 

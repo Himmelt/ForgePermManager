@@ -145,7 +145,7 @@ public class CommandGroup extends AvalonCommand {
             @Override
             public void execute(ICommandSender sender, ArrayList<String> args) {
                 if (args.size() == 1) {
-                    ForgePermAPI.getPermManager().saveGroupJson(args.get(0));
+                    ForgePermAPI.getPermManager().exportGroupJson(args.get(0));
                     sender.sendMessage(new TextComponentString("export success!"));
                 } else {
                     sender.sendMessage(new TextComponentString("invalid parameters!"));

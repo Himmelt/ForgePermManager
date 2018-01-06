@@ -56,7 +56,7 @@ public class StorageManager {
         }
     }
 
-    public void savePlayerJson(String username, Permission player) {
+    public void exportPlayerJson(String username, Permission player) {
         if (username != null && !username.isEmpty() && player != null) {
             try {
                 FileUtils.writeStringToFile(new File(root, "players/" + username + ".json"), GSON.toJson(player), "UTF-8");
@@ -66,7 +66,7 @@ public class StorageManager {
         }
     }
 
-    public void saveGroupJson(String groupname, Permission group) {
+    public void exportGroupJson(String groupname, Permission group) {
         if (groupname != null && !groupname.isEmpty() && group != null) {
             try {
                 FileUtils.writeStringToFile(new File(root, "groups/" + groupname + ".json"), GSON.toJson(group), "UTF-8");
@@ -74,6 +74,16 @@ public class StorageManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Permission importGroupJson(String groupname) {
+        if (groupname != null && !groupname.isEmpty()) {
+            try {
+                return GSON.fromJson(FileUtils.readFileToString(new File(root, "groups/" + groupname + ".json"), "UTF-8"), Permission.class);
+            } catch (IOException ignored) {
+            }
+        }
+        return null;
     }
 
 /*

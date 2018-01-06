@@ -181,8 +181,16 @@ public class PermissionManager implements PermManager {
         storage.saveGroup(groupname, groups.get(groupname));
     }
 
-    public void saveGroupJson(String groupname) {
-        storage.saveGroupJson(groupname, groups.get(groupname));
+    public void exportGroupJson(String groupname) {
+        storage.exportGroupJson(groupname, groups.get(groupname));
+    }
+
+    public void importGroupJson(String groupname) {
+        Permission group = groups.get(groupname);
+        if (group != null) {
+            group = storage.importGroupJson(groupname);
+            if (group != null) groups.put(groupname, group);
+        }
     }
 
     public Permission getDefaultGroup() {

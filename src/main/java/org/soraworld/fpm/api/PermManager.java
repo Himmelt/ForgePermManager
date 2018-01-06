@@ -40,5 +40,7 @@ public interface PermManager {
 
     void saveGroup(String groupname);
 
-    void saveGroupJson(String groupname);
+    void exportGroupJson(String groupname);
+
+    void importGroupJson(String groupname);
 }
